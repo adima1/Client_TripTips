@@ -28,7 +28,7 @@
     "build": "react-scripts build",
     "test": "npx mocha tests/form.spec.js",
     "eject": "react-scripts eject",
-     "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
   },
   "eslintConfig": {
     "extends": [
