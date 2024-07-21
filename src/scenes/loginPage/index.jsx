@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'; // ייבוא React ו-hooks מהספרייה
+import React, { useState, useEffect } from "react"; // ייבוא React ו-hooks מהספרייה
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material"; // ייבוא רכיבי MUI
 import Form from "./Form"; // ייבוא רכיב טופס מהקובץ Form
 
 // מערך תמונות שישמשו כרקע
 const images = [
-  '/assets/background1.jpg', // נתיב לתמונה 1
-  '/assets/background2.jpg', // נתיב לתמונה 2
-  '/assets/background3.jpg'  // נתיב לתמונה 3
+  "/assets/background1.jpg", // נתיב לתמונה 1
+  "/assets/background2.jpg", // נתיב לתמונה 2
+  "/assets/background3.jpg"  // נתיב לתמונה 3
 ];
 
 const LoginPage = () => {

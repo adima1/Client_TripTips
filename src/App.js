@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+import React from "react";
 
 function App() {
   // השגת מצב הנושא (מצב כהה או בהיר) מהחנות של Redux

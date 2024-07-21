@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// הגדרת המצב הראשוני של ה-state
+
+//הגדרת המצב הראשוני של ה-state ;
 const initialState = {
   mode: "light", // מצב התאורה (אור/חושך)
   user: null, // משתמש מחובר
@@ -29,9 +30,12 @@ export const authSlice = createSlice({
     },
     // פעולה להגדרת רשימת חברים של המשתמש
     setFriends: (state, action) => {
-      if (state.user) {
+      if (state.user) 
+      {
         state.user.friends = action.payload.friends;
-      } else {
+      } 
+      else 
+      {
         console.error("user friends non-existent :("); // הודעת שגיאה אם אין משתמש
       }
     },
