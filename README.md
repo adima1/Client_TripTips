@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+README.md
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+"TripTips" is a website designed to provide information for travelers and serve as a social network. The project includes a Node.js and Express-based backend server and a React-based frontend.
+Steps to install the project: Use Visual Studio Code where we wrote our code.
 
-## Available Scripts
+Steps to install and run the project:
 
-In the project directory, you can run:
+1.	Installing Node.js along with npm:
+  -	Check if npm is already installed:
+    o	Open terminal or cmd and type the command: 'npm -v' to check if it is already installed on your computer.
+  -	If Node.js and npm are not installed:
+    o	Go to the official Node.js website and download the installer from the following link: https://nodejs.org/en.
+    o	Install Node.js, which will also install npm along with it.
+  -	Ensure the PATH is set correctly by performing the following steps:
+    o	Open the Control Panel and click on "System and Security."
+    o	Click on "System" and then on "Advanced system settings."
+    o	Click on "Environment Variables."
+    o	Under "System variables," look for the variable "Path" and click on "Edit."
+    o	Add the path to the folder where npm is installed (usually something like C:\Program Files\nodejs\).
+    o	Click "OK" to save the changes and restart your computer.
 
-### `npm start`
+2.	Download the server code: 
+  Git link: https://github.com/adima1/Server_TripTips.git
+3.	Download the client code:
+  Git link: https://github.com/adima1/Client_TripTips.git
+4.	Start the server using the commands:
+  o	npm run start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+5.	Start the client using the commands:
+  o	npm install
+  o	npm run start
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+6.	Click the link that leads to the registration screen after the site opens on the login screen.
+7.	Enter user details to register on the site. After a successful registration, you will be redirected to the login screen.
+8.	Enter the username and email that were registered in the system into the appropriate fields on the login screen.
+9.	Navigate to the home page after a successful login with valid credentials.
+10.	Click on the question mark icon in the navigation bar to go to the About page.
