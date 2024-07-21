@@ -30,8 +30,8 @@ Steps to install and run the project:
   o	npm install
   o	npm run start
 
-6.	Click the link that leads to the registration screen after the site opens on the login screen.
-7.	Enter user details to register on the site. After a successful registration, you will be redirected to the login screen.
-8.	Enter the username and email that were registered in the system into the appropriate fields on the login screen.
-9.	Navigate to the home page after a successful login with valid credentials.
-10.	Click on the question mark icon in the navigation bar to go to the About page.
+7.	Click the link that leads to the registration screen after the site opens on the login screen.
+8.	Enter user details to register on the site. After a successful registration, you will be redirected to the login screen.
+9.	Enter the username and email that were registered in the system into the appropriate fields on the login screen.
+10.	Navigate to the home page after a successful login with valid credentials.
+11.	Click on the question mark icon in the navigation bar to go to the About page.
