@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client"; // ייבוא של ReactDOM ליצירת root לאפליקציה
 import "./index.css"; // ייבוא קובץ ה-CSS הראשי
-import App from "./App"; // ייבוא הקומפוננטה הראשית של האפליקציה
+import App from "./App.js"; // ייבוא הקומפוננטה הראשית של האפליקציה
 import authReducer from "./state"; // ייבוא ה-reducer של האימות שנוצר ב-state
 import { configureStore } from "@reduxjs/toolkit"; // ייבוא של פונקציית יצירת ה-store מ-Redux Toolkit
 import { Provider } from "react-redux"; // ייבוא של Provider ל-redux
@@ -15,7 +15,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist"; // ייבוא כלים ל-persistence מ-redux-persist
-import storage from "redux-persist/lib/storage"; // ייבוא סוג ה-storage לשימוש עם redux-persist
+import storage from "redux-persist/lib/storage/index.js"; // ייבוא סוג ה-storage לשימוש עם redux-persist
 import { PersistGate } from "redux-persist/integration/react"; // ייבוא של PersistGate לאינטגרציה עם React
 
 // הגדרת קונפיגורציה ל-persist (שימור)
