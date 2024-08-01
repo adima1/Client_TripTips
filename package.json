@@ -28,7 +28,8 @@
     "build": "react-scripts build",
     "test": "npx mocha tests/form.spec.js",
     "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx}"
+    "lint": "eslint src/**/*.{js,jsx}",
+    "lintfix": "eslint src/**/*.{js,jsx} --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -53,8 +54,13 @@
     "@types/chai": "^4.3.16",
     "@types/mocha": "^10.0.7",
     "chai": "^5.1.1",
-    "eslint": "^8.0.0",
+    "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
+    "eslint-plugin-react": "^7.35.0",
     "mocha": "^10.7.0"
   }
 }
