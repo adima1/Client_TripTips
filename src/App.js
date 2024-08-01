@@ -3,12 +3,19 @@ import HomePage from "scenes/homePage";
 import LoginPage from "scenes/loginPage";
 import ProfilePage from "scenes/profilePage";
 import AboutPage from "scenes/aboutPage";
+import SearchPage from "scenes/searchPage";
+import RatingPage from "scenes/ratingPage";
+import EntryPage from "scenes/entryPage";
+
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
 import React from "react";
+
+
+
 
 function App() {
   // השגת מצב הנושא (מצב כהה או בהיר) מהחנות של Redux
@@ -26,19 +33,28 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
+            {/*  עבור דף כניסה>*/}
+            <Route path="/" element={<EntryPage />} />
+
             {/* Route עבור דף ההתחברות */}
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
 
             {/* Route עבור דף הבית, אם המשתמש מחובר */}
-            {/*<Route
+            <Route
               path="/home"
               element={isAuth ? <HomePage /> : <Navigate to="/" />}
-            />*/}
-            <Route path="/home" element={<HomePage />} />  
+            />
+            {/*<Route path="/home" element={<HomePage />} />  */}
+
+            {/*  עבור דף חיפוש>*/}
+            <Route path="/search" element={<SearchPage />} />
+
+             {/*  עבור דף דירוג>*/}
+             <Route path="/rating" element={<RatingPage />} />
 
              {/*  עבור דף אודות>*/}
-            
             <Route path="/about" element={<AboutPage />} />
+
             {/* Route עבור דף פרופיל המשתמש, אם המשתמש מחובר */}
             <Route
               path="/profile/:userId"

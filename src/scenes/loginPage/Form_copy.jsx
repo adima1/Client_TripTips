@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types"; // ייבוא PropTypes
+import { useState } from "react";
+import React from "react";
 import {
   Box,
   Button,
   TextField,
   useMediaQuery,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -14,20 +13,29 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 
+// Schema for registration
 const registerSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
-  location: yup.string().required("required"),
-  occupation: yup.string().required("required"),
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  email: yup.string().email("Invalid email format").required("Email is required"),
+  password: yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters long")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/\d/, "Password must contain at least one digit")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+  location: yup.string().required("Location is required"),
+  occupation: yup.string().required("Occupation is required"),
 });
 
+// Schema for login
 const loginSchema = yup.object().shape({
-  email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
+  email: yup.string().email("Invalid email format").required("Email is required"),
+  password: yup.string().required("Password is required"),
 });
 
+// Initial values for registration
 const initialValuesRegister = {
   firstName: "",
   lastName: "",
@@ -37,69 +45,75 @@ const initialValuesRegister = {
   occupation: "",
 };
 
+// Initial values for login
 const initialValuesLogin = {
   email: "",
   password: "",
 };
 
-const Form = ({ type }) => {
-  const [pageType, setPageType] = useState(type); // שינוי השורה הזו
-  const { palette } = useTheme();
+const Form = () => {
+  const [pageType, setPageType] = useState("login");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  // Handle form submission for registration
   const register = async (values, onSubmitProps) => {
-    // שליחת הטופס
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
+    try {
+      const formData = new FormData();
+      for (let key in values) {
+        formData.append(key, values[key]);
+      }
 
-    const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
-      {
+      const response = await fetch("http://localhost:3001/auth/register", {
         method: "POST",
         body: formData,
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        console.error("Registration failed:", errorResponse.error);
+        return;
       }
-    );
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
 
-    if (savedUser) {
+      //const savedUser = await response.json();
+      onSubmitProps.resetForm();
       setPageType("login");
+    } catch (error) {
+      console.error("An error occurred during registration:", error);
     }
   };
 
+  // Handle form submission for login
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        })
-      );
+    try {
+      const response = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        console.error("Login failed:", errorResponse.msg);
+        return;
+      }
+
+      const loggedIn = await response.json();
+      onSubmitProps.resetForm();
+      dispatch(setLogin({ user: loggedIn.user, token: loggedIn.token }));
       navigate("/home");
+    } catch (error) {
+      console.error("An error occurred during login:", error);
     }
   };
 
+  // Handle form submit based on page type
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
-  };
-
-  const handlePanelChange = (panelType) => {
-    setPageType(panelType);
-    navigate(`/login?type=${panelType}`);
   };
 
   return (
@@ -115,7 +129,6 @@ const Form = ({ type }) => {
         handleBlur,
         handleChange,
         handleSubmit,
-        // הסר את resetForm אם לא נעשה בו שימוש
       }) => (
         <form onSubmit={handleSubmit}>
           <Box
@@ -134,11 +147,9 @@ const Form = ({ type }) => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
-                  }
+                  error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                   helperText={touched.firstName && errors.firstName}
-                  sx={{ gridColumn: "span 2" }}
+                  sx={{ gridColumn: "span 2", "&.Mui-focused fieldset": { borderColor: "green" } }}
                 />
                 <TextField
                   label="Last Name"
@@ -166,9 +177,7 @@ const Form = ({ type }) => {
                   onChange={handleChange}
                   value={values.occupation}
                   name="occupation"
-                  error={
-                    Boolean(touched.occupation) && Boolean(errors.occupation)
-                  }
+                  error={Boolean(touched.occupation) && Boolean(errors.occupation)}
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
@@ -194,7 +203,7 @@ const Form = ({ type }) => {
               name="password"
               error={Boolean(touched.password) && Boolean(errors.password)}
               helperText={touched.password && errors.password}
-              sx={{ gridColumn: "span 4" }}
+              sx={{ gridColumn: "span 4", "& .MuiOutlinedInput-root.Mui-error": { "& fieldset": { borderColor: "red" } } }}
             />
           </Box>
 
@@ -203,24 +212,25 @@ const Form = ({ type }) => {
               fullWidth
               type="submit"
               sx={{
-                m: "2rem 0",
-                p: "1rem",
-                backgroundColor: palette.primary.main,
-                color: palette.background.alt,
-                "&:hover": { color: palette.primary.main },
+                mt: "2rem",
+                p: "0.7rem",
+                backgroundColor: "#006B7D",
+                fontSize: "1.2rem",
+                color: "white",
+                "&:hover": { color: "white", backgroundColor: "#0092A8" },
               }}
             >
               {isLogin ? "LOGIN" : "REGISTER"}
             </Button>
             <Typography
-              onClick={() => handlePanelChange(isLogin ? "register" : "login")}
+              onClick={() => setPageType(isLogin ? "register" : "login")}
               sx={{
+                mt: "1rem",
                 textDecoration: "underline",
-                color: palette.primary.main,
-                "&:hover": {
-                  cursor: "pointer",
-                  color: palette.primary.light,
-                },
+                color:"#006B7D",
+                fontSize: "1.0rem",
+                fontWeight:"bold",
+                "&:hover": { cursor: "pointer" },
               }}
             >
               {isLogin
@@ -232,11 +242,6 @@ const Form = ({ type }) => {
       )}
     </Formik>
   );
-};
-
-// הוספת PropTypes
-Form.propTypes = {
-  type: PropTypes.oneOf(["login", "register"]).isRequired, // הגדרת סוג הנתון שהקומפוננטה מצפה לו
 };
 
 export default Form;
