@@ -6,7 +6,7 @@ const initialState = {
   mode: "light", // מצב התאורה (אור/חושך)
   user: null, // משתמש מחובר
   token: null, // טוקן לאימות
-  posts: [], // רשימת פוסטים
+  posts: [] // רשימת פוסטים
 };
 
 // יצירת slice עבור האימות (authentication)
@@ -30,12 +30,9 @@ export const authSlice = createSlice({
     },
     // פעולה להגדרת רשימת חברים של המשתמש
     setFriends: (state, action) => {
-      if (state.user) 
-      {
+      if (state.user) {
         state.user.friends = action.payload.friends;
-      } 
-      else 
-      {
+      } else {
         console.error("user friends non-existent :("); // הודעת שגיאה אם אין משתמש
       }
     },
@@ -50,8 +47,8 @@ export const authSlice = createSlice({
         return post;
       });
       state.posts = updatedPosts;
-    },
-  },
+    }
+  }
 });
 
 // ייצוא הפעולות (actions) לייבוא ושימוש בקומפוננטות אחרות

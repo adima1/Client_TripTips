@@ -11,7 +11,7 @@ const FlexBetween = styled(Box)({
   // יישור פריטי הילדים כך שיהיו מפוזרים באופן אחיד עם רווחים ביניהם
   justifyContent: "space-between",
   // יישור פריטי הילדים כך שיהיו ממרכזים לאורך הציר המשני (אופקית במקרה זה)
-  alignItems: "center",
+  alignItems: "center"
 });
 
 // ייצוא רכיב FlexBetween לשימוש בחלקים אחרים של האפליקציה
