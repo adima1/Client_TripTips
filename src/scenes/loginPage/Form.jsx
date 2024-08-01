@@ -205,7 +205,7 @@ const Form = ({ type }) => {
               sx={{
                 m: "2rem 0",
                 p: "1rem",
-                backgroundColor: palette.primary.main,
+                backgroundColor: "#006B7D",
                 color: palette.background.alt,
                 "&:hover": { color: palette.primary.main },
               }}
@@ -216,7 +216,7 @@ const Form = ({ type }) => {
               onClick={() => handlePanelChange(isLogin ? "register" : "login")}
               sx={{
                 textDecoration: "underline",
-                color: palette.primary.main,
+                color: "#006B7D",
                 "&:hover": {
                   cursor: "pointer",
                   color: palette.primary.light,

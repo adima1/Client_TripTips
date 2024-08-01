@@ -47,19 +47,32 @@ const LoginPage = () => {
       }}
     >
       <Box
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
+        backgroundColor={`${theme.palette.background.alt}B3`}
+      >
+        <Typography fontWeight="bold" fontSize="70px" color="#006B7D">
+          TripTips
+        </Typography>
+      </Box>
+
+      <Box
         width={isNonMobileScreens ? "50%" : "93%"}
         p="2rem"
         m="2rem auto"
         borderRadius="1.5rem"
-        backgroundColor={theme.palette.background.alt}
+        backgroundColor={`${theme.palette.background.alt}B3`}
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
       >
-        <Typography
-          fontWeight="bold"
-          variant="h3"
-          color="primary"
-          sx={{ mb: "1.5rem" }}
-        >
-          TripTips
+        <Typography fontWeight="500" variant="h4" sx={{ mb: "1.5rem" }} color="#006B7D">
+          Welcome to TripTips, the Social Media for travelers!
         </Typography>
         <Form type={type} /> {/* העברת סוג הפאנל לטופס */}
       </Box>
