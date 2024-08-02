@@ -6,6 +6,7 @@ import AboutPage from "scenes/aboutPage";
 import SearchPage from "scenes/searchPage";
 import RatingPage from "scenes/ratingPage";
 import EntryPage from "scenes/entryPage";
+import UploadPost from "scenes/uploatPost";
 
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -54,6 +55,9 @@ function App() {
 
              {/*  עבור דף אודות>*/}
             <Route path="/about" element={<AboutPage />} />
+
+             {/* העלאת תמונה */}
+            <Route path="/upload" element={<UploadPost />} />
 
             {/* Route עבור דף פרופיל המשתמש, אם המשתמש מחובר */}
             <Route

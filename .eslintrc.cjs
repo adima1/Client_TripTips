@@ -11,7 +11,7 @@ module.exports = {
   rules: {
     semi: ["error", "always"] ,
     quotes: ['error', 'double'],
-    'max-len': ['error', { code: 150 }],
+    'max-len': ['error', { code: 200 }],
   },
   globals: {
     console: 'readonly', // הוסף את השורה הזו

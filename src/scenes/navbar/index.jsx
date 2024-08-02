@@ -97,6 +97,7 @@ const Navbar = () => {
           </IconButton>
 
           <IconButton
+            onClick={() => navigate("/upload")}
             onMouseEnter={() => setIsAddHovered(true)}
             onMouseLeave={() => setIsAddHovered(false)}
             sx={{
@@ -229,6 +230,7 @@ const Navbar = () => {
               )}
             </IconButton>
             <IconButton
+              onClick={() => navigate("/upload")}
               onMouseEnter={() => setIsAddHovered(true)}
               onMouseLeave={() => setIsAddHovered(false)}
               sx={{
