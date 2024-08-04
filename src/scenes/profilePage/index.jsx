@@ -14,8 +14,7 @@ import {
   ListItem, 
   ListItemText,
   IconButton,
-  Tooltip,
-  Card
+  Tooltip
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -131,25 +130,25 @@ const ProfilePage = () => {
             {user.email}
           </Typography>
           {userId === loggedInUserId && (
-            <Button variant="outlined" onClick={handleEditProfileOpen}>עריכת פרופיל</Button>
+            <Button variant="outlined" onClick={handleEditProfileOpen}>edit profile</Button>
           )}
           <Box mt={2} display="flex" alignItems="center">
-            <Button onClick={handleFollowersOpen}>עוקבים אחריי: {user.followers?.length || 0}</Button>
-            <Button onClick={handleFollowingOpen}>אני עוקב אחרי: {user.following?.length || 0}</Button>
+            <Button onClick={handleFollowersOpen}>followers: {user.followers?.length || 0}</Button>
+            <Button onClick={handleFollowingOpen}>following: {user.following?.length || 0}</Button>
             <Box display="flex" alignItems="center" ml={2}>
               <Star color="primary" />
-              <Typography variant="body1" ml={1}>{user.stars || 0} כוכבים</Typography>
+              <Typography variant="body1" ml={1}>{user.stars || 0} stars</Typography>
             </Box>
           </Box>
         </Box>
 
         <Box width="100%" maxWidth="600px">
           <Tabs value={tab} onChange={handleTabChange} centered>
-            <Tab label="פוסטים" />
-            <Tab label="שמרתי" />
-            <Tab label="אהבתי" />
-            <Tab label="שיתפתי" />
-            <Tab label="סטטיסטיקה" />
+            <Tab label="posts" />
+            <Tab label="saved" />
+            <Tab label="liked" />
+            <Tab label="shared" />
+            <Tab label="statistics" />
           </Tabs>
           {tab === 0 && (
             <PostsWidget
@@ -205,7 +204,7 @@ const ProfilePage = () => {
 
       <Dialog open={followingOpen} onClose={handleFollowingClose}>
         <DialogTitle>
-          אני עוקב אחרי
+          following
           <IconButton
             aria-label="close"
             onClick={handleFollowingClose}
@@ -234,7 +233,7 @@ const ProfilePage = () => {
 
       <Dialog open={postDetailsOpen} onClose={handlePostDetailsClose}>
         <DialogTitle>
-          פרטי פוסט
+        post details
           <IconButton
             aria-label="close"
             onClick={handlePostDetailsClose}
@@ -251,10 +250,10 @@ const ProfilePage = () => {
               {userId === loggedInUserId && (
                 <Box mt={2} display="flex" justifyContent="space-between">
                   <Button variant="outlined" color="primary" startIcon={<Edit />} onClick={() => handleEditPost(selectedPost)}>
-                    ערוך
+                    edit
                   </Button>
                   <Button variant="outlined" color="secondary" startIcon={<Delete />} onClick={() => handleDeletePost(selectedPost)}>
-                    מחק
+                    delete
                   </Button>
                 </Box>
               )}

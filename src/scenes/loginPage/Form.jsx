@@ -47,7 +47,13 @@ const registerSchema = yup.object().shape({
 
 // סכמת אימות עבור טופס כניסה
 const loginSchema = yup.object().shape({
-  email: emailValidationSchema, // אימות דוא"ל
+  login: yup.string()
+    .test("is-valid", "Invalid email or phone number", function(value) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^05\d{8}$/;
+      return emailRegex.test(value) || phoneRegex.test(value);
+    })
+    .required("Required"), // אימות דוא"ל או מספר טלפון
   password: passwordValidationSchema, // אימות סיסמה
 });
 
@@ -65,7 +71,7 @@ const initialValuesRegister = {
 
 // ערכים התחלתיים עבור טופס כניסה
 const initialValuesLogin = {
-  email: "",
+  login: "",
   password: "",
 };
 
@@ -220,19 +226,31 @@ const Form = ({ type }) => {
                   helperText={touched.phoneNumber && errors.phoneNumber}
                   sx={{ gridColumn: "span 4" }}
                 />
+                <TextField
+                  label="Email" // דוא"ל
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.email}
+                  name="email"
+                  error={Boolean(touched.email) && Boolean(errors.email)}
+                  helperText={touched.email && errors.email}
+                  sx={{ gridColumn: "span 4" }}
+                />
               </>
             )}
 
-            <TextField
-              label="Email" // דוא"ל
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.email}
-              name="email"
-              error={Boolean(touched.email) && Boolean(errors.email)}
-              helperText={touched.email && errors.email}
-              sx={{ gridColumn: "span 4" }}
-            />
+            {isLogin && (
+              <TextField
+                label="Email or Phone Number" // דוא"ל או מספר טלפון
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.login}
+                name="login"
+                error={Boolean(touched.login) && Boolean(errors.login)}
+                helperText={touched.login && errors.login}
+                sx={{ gridColumn: "span 4" }}
+              />
+            )}
             <TextField
               label="Password" // סיסמה
               type="password"

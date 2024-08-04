@@ -27,23 +27,31 @@ const PostWidget = ({
   picturePath,
   userPicturePath,
   likes,
+  saved,
   comments,
   userRating,
 }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
-  const loggedInUserId = useSelector((state) => state.user._id);
+  const loggedInUserId = useSelector((state) => state.user.id);
+  console.log("loggedInUserId:", loggedInUserId);
   
   const [isLiked, setIsLiked] = useState(Boolean(likes[loggedInUserId]));
-  const [isSaved, setIsSaved] = useState(false);
-  const [isShared, setIsShared] = useState(false);
-  
+  //const [isLiked, setIsLiked] = useState(false);
+  console.log("isLiked:", isLiked);
   const likeCount = Object.keys(likes).length;
+  
+  const [isSaved, setIsSaved] = useState(false);
+  // const savedCount = Object.keys(saved).length;
 
+  const [isShared, setIsShared] = useState(false);
+ 
+  
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
-
+  
+  
   const patchLike = async () => {
     try {
       const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
@@ -54,7 +62,6 @@ const PostWidget = ({
         },
         body: JSON.stringify({ userId: loggedInUserId }),
       });
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -67,9 +74,26 @@ const PostWidget = ({
     }
   };
 
-  const handleSave = () => {
-    // Implement save functionality
-    setIsSaved(!isSaved);
+  const patchSave = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/posts/${postId}/save`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: loggedInUserId }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const updatedPost = await response.json();
+      dispatch(setPost({ post: updatedPost }));
+      setIsSaved(!isSaved);
+    } catch (error) {
+      console.error("Error saving post:", error);
+    }
   };
 
   const handleShare = () => {
@@ -118,11 +142,16 @@ const PostWidget = ({
               )}
             </IconButton>
             <Typography>{likeCount}</Typography>
-          </FlexBetween>
 
-          <IconButton onClick={handleSave}>
-            {isSaved ? <BookmarkOutlined /> : <BookmarkBorderOutlined />}
-          </IconButton>
+            <IconButton onClick={patchSave}>
+              {isSaved ? (
+                <BookmarkOutlined sx={{ color: primary }} />
+              ) : (
+                <BookmarkBorderOutlined />
+              )}
+            </IconButton>
+
+          </FlexBetween>
 
           <IconButton onClick={handleShare}>
             <ShareOutlined />
@@ -149,6 +178,7 @@ PostWidget.propTypes = {
   picturePath: PropTypes.string,
   userPicturePath: PropTypes.string,
   likes: PropTypes.object.isRequired,
+  saved: PropTypes.object.isRequired,
   comments: PropTypes.arrayOf(PropTypes.string).isRequired,
   userRating: PropTypes.number.isRequired,
 };

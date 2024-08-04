@@ -4,7 +4,7 @@ import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import PropTypes from "prop-types";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts || []); // Ensure posts is an array
   const token = useSelector((state) => state.token);
@@ -30,13 +30,47 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     dispatch(setPosts({ posts: data }));
   };
 
+  const getLikedPosts = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${userId}/likes`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
+    dispatch(setPosts({ posts: data }));
+  };
+
+  const getSavedPosts = async () => {
+    const response = await fetch(
+      `http://localhost:3001/posts/${userId}/saves`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
+    dispatch(setPosts({ posts: data }));
+  };
+
   useEffect(() => {
     if (isProfile) {
       getUserPosts();
-    } else {
+    }
+    
+    if (isLiked)  {
+      getLikedPosts();
+    }
+
+    if (isSaved)  {
+      getSavedPosts();
+    }
+
+    else {
       getPosts();
     }
-  }, []); // Add isProfile as a dependency if it can change
+  }, [isProfile, isLiked, isSaved]); // Add isProfile and isLiked as dependencies if they can change
 
   if (!Array.isArray(posts)) {
     return <div>No posts available</div>;
@@ -55,6 +89,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           picturePath,
           userPicturePath,
           likes,
+          saved, 
           comments,
         }) => (
           <PostWidget
@@ -67,6 +102,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             picturePath={picturePath}
             userPicturePath={userPicturePath}
             likes={likes}
+            saved={saved}
             comments={comments}
           />
         )
@@ -78,6 +114,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 PostsWidget.propTypes = {
   userId: PropTypes.string.isRequired,
   isProfile: PropTypes.bool,
+  isLiked: PropTypes.bool,
+  isSaved: PropTypes.bool,
 };
 
 export default PostsWidget;

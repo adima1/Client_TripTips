@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"; // ייבוא React ו-hooks מהספרייה
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material"; // ייבוא רכיבי MUI
+import { Box, Typography, useTheme, useMediaQuery, IconButton } from "@mui/material"; // ייבוא רכיבי MUI
+import CloseIcon from "@mui/icons-material/Close"; // ייבוא אייקון הסגירה מ-MUI
 import Form from "./Form"; // ייבוא רכיב טופס מהקובץ Form
-import { useLocation } from "react-router-dom"; // ייבוא ה-hook useLocation מ-react-router-dom
+import { useLocation, useNavigate } from "react-router-dom"; // ייבוא ה-hooks useLocation ו-useNavigate מ-react-router-dom
 
 // מערך תמונות שישמשו כרקע
 const images = [
@@ -18,6 +19,7 @@ const LoginPage = () => {
   // יצירת מצב לשמירה על התמונה הנוכחית שמוצגת כרקע
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const location = useLocation(); // קבלת האובייקט location לניתוח הפרמטרים ב-URL
+  const navigate = useNavigate(); // hook לניווט בין דפים
 
   // שימוש ב-useEffect כדי להחליף תמונות כל 5 שניות
   useEffect(() => {
@@ -31,6 +33,10 @@ const LoginPage = () => {
 
   const searchParams = new URLSearchParams(location.search); // ניתוח הפרמטרים ב-URL
   const type = searchParams.get("type") || "login"; // קבלת סוג הפאנל (הרשמה או כניסה)
+
+  const handleClose = () => {
+    navigate("/"); // פונקציה לניווט לדף הבית
+  };
 
   return (
     <Box
@@ -52,8 +58,20 @@ const LoginPage = () => {
         justifyContent="center"
         alignItems="center"
         textAlign="center"
+        position="relative"
         backgroundColor={`${theme.palette.background.alt}B3`}
       >
+        <IconButton
+          onClick={handleClose}
+          sx={{
+            position: "absolute",
+            left: isNonMobileScreens ? "2rem" : "1rem",
+            top: isNonMobileScreens ? "2rem" : "1rem",
+            color: "#006B7D",
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <Typography fontWeight="bold" fontSize="70px" color="#006B7D">
           TripTips
         </Typography>
