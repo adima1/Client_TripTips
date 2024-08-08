@@ -88,7 +88,7 @@ const Form = ({ type }) => {
   // פונקציה לטיפול בהרשמה
   const register = async (values, onSubmitProps) => {
     try {
-      const savedUserResponse = await fetch("http://localhost:3001/auth/register", {
+      const savedUserResponse = await fetch("https://server-triptips.onrender.com/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -112,7 +112,7 @@ const Form = ({ type }) => {
   // פונקציה לטיפול בכניסה
   const login = async (values, onSubmitProps) => {
     try {
-      const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+      const loggedInResponse = await fetch("https://server-triptips.onrender.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -311,6 +311,7 @@ const Form = ({ type }) => {
       )}
     </Formik>
   );
+  
 };
 
 // הגדרת סוגי הפרופס עבור Form
