@@ -3,10 +3,10 @@
 version: 2.1
 
 orbs:
-  aws: circleci/node@5
+  aws: circleci/node@5.2
 
 workflows:
-  my-workflow:
+  jobs:
     -build
   
 jobs:
