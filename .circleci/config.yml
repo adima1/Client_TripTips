@@ -6,7 +6,8 @@ orbs:
   aws: circleci/node@5
 
 workflows:
-  -build
+  my-workflow:
+    -build
   
 jobs:
   build:
