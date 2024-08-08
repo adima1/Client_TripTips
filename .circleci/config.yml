@@ -1,27 +1,22 @@
 version: 2.1
-
 orbs:
   node: circleci/node@5
-
-
 jobs:
-  build:
-    executor: 
-      name: node/default
+  test-node:
+    executor: node/default
     steps:
-      #- checkout
+      - checkout
       - run:
-        name: install dependencies
-        command: npm install
+          name: install deps
+          command: npm install
       - run:
-        name: Run tests
-        command: npm run test
+          name: Run tests
+          command: npm test
       - run:
-        name: run lint
-        command: npm run lint
+          name: Run lint
+          command: npm run lint
 
 workflows:
-  version: 2
-  my-workflow:
+  build-and-test:
     jobs:
-      - build
+      - test-node
