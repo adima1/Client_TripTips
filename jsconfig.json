@@ -1,11 +1,6 @@
 {
-  "compilerOptions": {
-    "target": "ES6", // גרסת ה-ECMAScript המטרה
-    "baseUrl": "src", // הבסיס לנתיבי יבוא
-    "paths": {
-      "@components/*": ["components/*"]
-    }
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
-}
+    "compilerOptions": {
+      "baseUrl": "src"
+    },
+    "include": ["src"]
+  }
