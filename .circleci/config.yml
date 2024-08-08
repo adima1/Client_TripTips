@@ -3,11 +3,12 @@
 version: 2.1
 
 orbs:
-  aws: circleci/node@5.2
+  node: circleci/node@5.2
 
 workflows:
-  jobs:
-    -build
+  my_workflows:
+    jobs:
+      -build
   
 jobs:
   build:
@@ -24,4 +25,4 @@ jobs:
       - run:
         name: run lint
         command: npm run lint
-
+   
