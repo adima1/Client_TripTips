@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 
 const AboutPage = () => {
-  console.log("Rendering AboutPage");
+  const [aboutContent, setAboutContent] = useState({ title: "", content: "" });
+
+  useEffect(() => {
+    fetch("/about")
+      .then((response) => response.json())
+      .then((data) => setAboutContent(data))
+      .catch((error) => console.error("Error fetching about content:", error));
+  }, []);
 
   return (
     <Box
@@ -14,31 +21,13 @@ const AboutPage = () => {
       textAlign="center"
     >
       <Typography variant="h2" component="h1" gutterBottom>
-        אודות TripTips
+        {aboutContent.title}
       </Typography>
       <Typography variant="body1" component="p" maxWidth="800px">
-        TripTips 
-        מהות הרשת החברתית Trip-Tips:
-        המערכת נותנת גישה למטיילים אשר רוצים להתרשם ממקומות בילוי ומטיולים בארץ.
-        כל משתמש יכול להתחבר לאתר כאורח או כמשתמש רשום.
-        כך שמשתמש רשום יוכל לשתף מקומות אשר נכח בהם על ידי העלאה של פוסט ובו: תמונה, תיאור ומיקום
-        שלהם לפרופיל שלו באתר או על ידי שיתוף פוסט של משתמש רשום אחר בפרופיל שלו.
-        בנוסף, משתמש רשום יוכל לסמן ״לייק״ לפוסטים שאהב וכך משתמשים אחרים שצופים בפוסט זה יוכלו
-        לראות חוות דעת נוספת על המקום דרך כמות ה״לייקים״ על אותו פוסט.
-        כמו כן, המשתמש הרשום יכול לשמור אותם וכך לגשת לפוסטים אלה במועד מאוחר יותר.
-        כל משתמש רשום, מקבל דירוג על פי הפעילות שלו באתר ועל פי זה משתמשים אחרים יכולים לדעת יותר
-        אם התוכן שהמשתמש מעלה פופולרי או שפחות.
-        אורח לעומת זאת כמו המשתמש הרשום, יכול רק לצפות בפרופילים של משתמשים, ולחפש ולצפות
-        בפוסטים של משתמשים אחרים.
-        כך מטיילים יכולים להכיר ולגלות מקומות בישראל ממטיילים אחרים שמנגישים את התוכן בצורה נוחה
-        וחווייתית יותר למשתמש.
-        צורך ביישום:
-        המערכת שלנו יכולה לעזור מאוד לאנשים שאינם מכירים מגוון רחב של מקומות בישראל שניתן לטייל בהם,
-        ליצור בהם חוויות חדשות ולהתרשם מהנופים המרהיבים שלהם.
-        קהל היעד:
-        מטיילים בישראל שרוצים לקבל רעיונות לטיולים בארץ על פי שיתופי נופים ומקומות של מטיילים אחרים. כמו
-        כן, מטיילים אשר רוצים לשתף אחרים במקומות בישראל אשר היו בהם.
-        </Typography>
+        {aboutContent.content}
+      </Typography>
     </Box>
-  );};
-  export default AboutPage;
+  );
+};
+
+export default AboutPage;
