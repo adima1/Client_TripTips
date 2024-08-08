@@ -5,15 +5,11 @@ const AboutPage = () => {
   const [aboutContent, setAboutContent] = useState({ title: "", content: "" });
 
   useEffect(() => {
-    fetch("/about") // ודא שהכתובת נכונה
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
+    // החלף לכתובת השרת שלך
+    fetch("https://server-triptips.onrender.com/about")
+      .then((response) => response.json())
       .then((data) => setAboutContent(data))
-      .catch((error) => console.error("Error fetching about content:", error));
+      .catch((error) => console.error("שגיאה בטעינת תוכן אודות:", error));
   }, []);
 
   return (
