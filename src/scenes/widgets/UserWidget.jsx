@@ -30,7 +30,7 @@ import {
   
     const getUser = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });

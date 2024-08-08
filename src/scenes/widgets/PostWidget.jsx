@@ -54,7 +54,7 @@ const PostWidget = ({
   
   const patchLike = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/like`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ const PostWidget = ({
 
   const patchSave = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/save`, {
+      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/save`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -119,7 +119,7 @@ const PostWidget = ({
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`http://localhost:3001/assets/${picturePath}`}
+            src={`https://server-triptips.onrender.com/assets/${picturePath}`}
           />
           <Box position="absolute" top="10px" right="10px">
             <IconButton>

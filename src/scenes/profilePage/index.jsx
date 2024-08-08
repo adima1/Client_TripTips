@@ -39,7 +39,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
 
   const getUser = useCallback(async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -84,7 +84,7 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async (updatedProfile) => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
         method: "PATCH",
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -122,7 +122,7 @@ const ProfilePage = () => {
       >
         <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
           <Avatar
-            src={`http://localhost:3001/assets/${user.picturePath}`}
+            src={`https://server-triptips.onrender.com/assets/${user.picturePath}`}
             sx={{ width: 150, height: 150, mb: 2 }}
           />
           <Typography variant="h4">{user.firstName} {user.lastName}</Typography>

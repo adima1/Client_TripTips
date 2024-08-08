@@ -46,7 +46,7 @@ const StatisticsWidget = ({ userId }) => {
     const getStatistics = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/users/${userId}/statistics`,
+          `https://server-triptips.onrender.com/users/${userId}/statistics`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },

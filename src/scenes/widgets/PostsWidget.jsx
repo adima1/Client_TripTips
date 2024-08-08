@@ -10,7 +10,7 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
   const token = useSelector((state) => state.token);
 
   const getPosts = async () => {
-    const response = await fetch("http://localhost:3001/posts", {
+    const response = await fetch("https://server-triptips.onrender.com/posts", {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -20,7 +20,7 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
 
   const getUserPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
+      `https://server-triptips.onrender.com/posts/${userId}/posts`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -32,7 +32,7 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
 
   const getLikedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/likes`,
+      `https://server-triptips.onrender.com/posts/${userId}/likes`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -44,7 +44,7 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
 
   const getSavedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/saves`,
+      `https://server-triptips.onrender.com/posts/${userId}/saves`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
