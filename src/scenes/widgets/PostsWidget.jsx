@@ -4,7 +4,7 @@ import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import PropTypes from "prop-types";
 
-const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = false }) => {
+const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = false, isShared = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts || []); // Ensure posts is an array
   const token = useSelector((state) => state.token);
@@ -54,6 +54,18 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
     dispatch(setPosts({ posts: data }));
   };
 
+  const getSharedPosts = async () => {
+    const response = await fetch(
+      `https://server-triptips.onrender.com/posts/${userId}/shares`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const data = await response.json();
+    dispatch(setPosts({ posts: data }));
+  };
+
   useEffect(() => {
     if (isProfile) {
       getUserPosts();
@@ -67,10 +79,14 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
       getSavedPosts();
     }
 
+    if (isShared)  {
+      getSharedPosts();
+    }
+
     else {
       getPosts();
     }
-  }, [isProfile, isLiked, isSaved]); // Add isProfile and isLiked as dependencies if they can change
+  }, [isProfile, isLiked, isSaved, isShared]); // Add isProfile and isLiked as dependencies if they can change
 
   if (!Array.isArray(posts)) {
     return <div>No posts available</div>;
@@ -84,12 +100,14 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
           userId,
           firstName,
           lastName,
+          title,
           description,
           location,
           picturePath,
           userPicturePath,
           likes,
           saved, 
+          shared,
           comments,
         }) => (
           <PostWidget
@@ -97,12 +115,14 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
             postId={_id}
             postUserId={userId}
             name={`${firstName} ${lastName}`}
+            title= {title}
             description={description}
             location={location}
             picturePath={picturePath}
             userPicturePath={userPicturePath}
             likes={likes}
             saved={saved}
+            shared={shared}
             comments={comments}
           />
         )
@@ -116,6 +136,7 @@ PostsWidget.propTypes = {
   isProfile: PropTypes.bool,
   isLiked: PropTypes.bool,
   isSaved: PropTypes.bool,
+  isShared: PropTypes.bool,
 };
 
 export default PostsWidget;

@@ -28,6 +28,9 @@ function App() {
   // בדיקה אם המשתמש מחובר באמצעות קיום של טוקן
   const isAuth = Boolean(useSelector((state) => state.token));
 
+
+
+
   return (
     <div className="app">
       <BrowserRouter>

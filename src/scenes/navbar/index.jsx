@@ -19,6 +19,7 @@ import {
   Close,
   Add,
   Star,
+  Person, // אייקון פרופיל
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -34,7 +35,7 @@ const Navbar = () => {
   const [isSearchHovered, setIsSearchHovered] = useState(false);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // הוספת קריאה לפונקציה navigate
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
@@ -63,7 +64,6 @@ const Navbar = () => {
           }}
         >
           TripTips
-          
         </Typography>
         {isNonMobileScreens && (
           <IconButton
@@ -82,7 +82,7 @@ const Navbar = () => {
               transition: "box-shadow 0.3s",
             }}
           >
-            <Search sx={{ fontSize: "25px" }} /> {/* אייקון חיפוש */}
+            <Search sx={{ fontSize: "25px" }} />
           </IconButton>
         )}
       </FlexBetween>
@@ -119,7 +119,7 @@ const Navbar = () => {
           <IconButton
             onMouseEnter={() => setIsStarHovered(true)}
             onMouseLeave={() => setIsStarHovered(false)}
-            onClick={() => navigate("/rating")} // הוספת ניווט לדף דירוגים
+            onClick={() => navigate("/rating")}
             sx={{
               color: dark,
               boxShadow: isStarHovered ? `0px 4px 8px ${primaryLight}` : "none",
@@ -151,7 +151,26 @@ const Navbar = () => {
               transition: "box-shadow 0.3s",
             }}
           >
-            <ErrorOutline sx={{ fontSize: "25px" }} /> {/* סימן קריאה */}
+            <ErrorOutline sx={{ fontSize: "25px" }} />
+          </IconButton>
+
+          {/* הוספת אייקון פרופיל ושם המשתמש */}
+          <IconButton
+            onClick={() => navigate(`/profile/${user.id}`)}
+            sx={{
+              color: dark,
+              boxShadow: isAddHovered ? `0px 4px 8px ${primaryLight}` : "none",
+              "&:hover": {
+                boxShadow: `0px 4px 8px ${primaryLight}`,
+              },
+              "&:active": {
+                boxShadow: `0px 4px 8px ${primaryLight}`,
+              },
+              transition: "box-shadow 0.3s",
+            }}
+          >
+            <Person sx={{ fontSize: "25px" }} />
+            <Typography sx={{ marginLeft: "0.5rem" }}>{fullName}</Typography>
           </IconButton>
 
           <FormControl variant="standard" value={fullName}>
@@ -177,8 +196,8 @@ const Navbar = () => {
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  dispatch(setLogout()); // התנתקות
-                  navigate("/"); // ניווט לדף ההתחברות
+                  dispatch(setLogout());
+                  navigate("/");
                 }}
               >
                 Log Out
@@ -250,7 +269,7 @@ const Navbar = () => {
             <IconButton
               onMouseEnter={() => setIsStarHovered(true)}
               onMouseLeave={() => setIsStarHovered(false)}
-              onClick={() => navigate("/rating")} // הוספת ניווט לדף דירוגים
+              onClick={() => navigate("/rating")}
               sx={{
                 boxShadow: isStarHovered ? `0px 4px 8px ${primaryLight}` : "none",
                 "&:hover": {
@@ -280,7 +299,24 @@ const Navbar = () => {
                 transition: "box-shadow 0.3s",
               }}
             >
-              <ErrorOutline sx={{ fontSize: "25px" }} /> {/* סימן קריאה */}
+              <ErrorOutline sx={{ fontSize: "25px" }} />
+            </IconButton>
+            <IconButton
+              onClick={() => navigate("/profile")}
+              sx={{
+                color: dark,
+                boxShadow: isAddHovered ? `0px 4px 8px ${primaryLight}` : "none",
+                "&:hover": {
+                  boxShadow: `0px 4px 8px ${primaryLight}`,
+                },
+                "&:active": {
+                  boxShadow: `0px 4px 8px ${primaryLight}`,
+                },
+                transition: "box-shadow 0.3s",
+              }}
+            >
+              <Person sx={{ fontSize: "25px" }} />
+              <Typography sx={{ marginLeft: "0.5rem" }}>{fullName}</Typography>
             </IconButton>
             <FormControl variant="standard" value={fullName}>
               <Select
@@ -305,8 +341,8 @@ const Navbar = () => {
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
-                    dispatch(setLogout()); // התנתקות
-                    navigate("/"); // ניווט לדף ההתחברות
+                    dispatch(setLogout());
+                    navigate("/");
                   }}
                 >
                   Log Out

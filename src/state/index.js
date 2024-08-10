@@ -55,7 +55,7 @@ export const authSlice = createSlice({
 });
 
 // ייצוא הפעולות (actions) לייבוא ושימוש בקומפוננטות אחרות
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } =
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost} =
   authSlice.actions;
 
 // ייצוא ה-reducer לשימוש בקונפיגורציית ה-store

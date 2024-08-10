@@ -26,7 +26,7 @@ const HomePage = () => {
                     px: isNonMobileScreens ? 4 : 2, // הוסף ריפוד צדדי בהתאמה למסך קטן וגדול
                 }}
             >
-                <PostsWidget userId={_id} />
+                <PostsWidget userId={_id} userPicturePath={picturePath}/>
             </Box>
         </Box>
     );
@@ -35,9 +35,3 @@ const HomePage = () => {
 
 export default HomePage;
 
-/*const HomePage = ()=> {
-
-    return (<div>HomePage</div>)
-}
-
-export default HomePage;*/

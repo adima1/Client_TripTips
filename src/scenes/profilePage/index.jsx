@@ -46,7 +46,7 @@ const ProfilePage = () => {
     const data = await response.json();
     setUser(data);
   }, [userId, token]);
-
+  
   useEffect(() => {
     getUser();
   }, [getUser]);
@@ -182,7 +182,7 @@ const ProfilePage = () => {
 
       <Dialog open={followersOpen} onClose={handleFollowersClose}>
         <DialogTitle>
-          עוקבים אחריי
+          followers
           <IconButton
             aria-label="close"
             onClick={handleFollowersClose}

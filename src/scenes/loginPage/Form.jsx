@@ -13,6 +13,9 @@ import * as yup from "yup"; // מייבא את yup לאימות
 import { useNavigate } from "react-router-dom"; // מייבא את useNavigate לניווט
 import { useDispatch } from "react-redux"; // מייבא את useDispatch לניהול מצב Redux
 import { setLogin } from "state"; // מייבא את setLogin לפעולה ב-Redux
+import Dropzone from "react-dropzone";
+import FlexBetween from "components/FlexBetween";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 // סכמות אימות עבור שדות הטופס
 const emailValidationSchema = yup.string()
@@ -43,6 +46,7 @@ const registerSchema = yup.object().shape({
   location: yup.string().required("Required"), // אימות מקום מגורים
   occupation: yup.string().required("Required"), // אימות עיסוק
   phoneNumber: phoneValidationSchema, // אימות מספר טלפון
+  picture: yup.string().required("required"),
 });
 
 // סכמת אימות עבור טופס כניסה
@@ -67,6 +71,7 @@ const initialValuesRegister = {
   location: "",
   occupation: "",
   phoneNumber: "", // הוספת מספר טלפון לערכים התחלתיים
+  picture:""
 };
 
 // ערכים התחלתיים עבור טופס כניסה
@@ -87,28 +92,33 @@ const Form = ({ type }) => {
 
   // פונקציה לטיפול בהרשמה
   const register = async (values, onSubmitProps) => {
-    try {
-      const savedUserResponse = await fetch("https://server-triptips.onrender.com/auth/register", {
+    // this allows us to send form info with image
+    const formData = new FormData();
+    for (let value in values) {
+      formData.append(value, values[value]);
+    }
+    formData.append("picturePath", values.picture.name);
+
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+    
+    const savedUserResponse = await fetch(
+      "https://server-triptips.onrender.com/auth/register",
+      {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-
-      if (!savedUserResponse.ok) {
-        throw new Error(`HTTP error! Status: ${savedUserResponse.status}`); // טיפול בשגיאות HTTP
+        body: formData,
       }
+    );
+    const savedUser = await savedUserResponse.json();
+    onSubmitProps.resetForm();
 
-      const savedUser = await savedUserResponse.json();
-      onSubmitProps.resetForm(); // איפוס הטופס לאחר הרשמה
-
-      if (savedUser) {
-        setPageType("login"); // שינוי סוג הטופס לכניסה לאחר הרשמה
-      }
-    } catch (error) {
-      console.error("Error during registration:", error); // הדפסת שגיאות בקונסול
+    if (savedUser) {
+      setPageType("login");
     }
   };
 
+  
   // פונקציה לטיפול בכניסה
   const login = async (values, onSubmitProps) => {
     try {
@@ -164,6 +174,7 @@ const Form = ({ type }) => {
         handleBlur,
         handleChange,
         handleSubmit,
+        setFieldValue,
       }) => (
         <form onSubmit={handleSubmit}> {/* טופס עם טיפול בשליחה */}
           <Box
@@ -236,6 +247,39 @@ const Form = ({ type }) => {
                   helperText={touched.email && errors.email}
                   sx={{ gridColumn: "span 4" }}
                 />
+                <Box
+                  gridColumn="span 4"
+                  border={`1px solid ${palette.neutral.medium}`}
+                  borderRadius="5px"
+                  p="1rem"
+                >
+                  <Dropzone
+                    acceptedFiles=".jpg,.jpeg,.png"
+                    multiple={false}
+                    onDrop={(acceptedFiles) =>
+                      setFieldValue("picture", acceptedFiles[0])
+                    }
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <Box
+                        {...getRootProps()}
+                        border={`2px dashed ${palette.primary.main}`}
+                        p="1rem"
+                        sx={{ "&:hover": { cursor: "pointer" } }}
+                      >
+                        <input {...getInputProps()} />
+                        {!values.picture ? (
+                          <p>Add Picture Here</p>
+                        ) : (
+                          <FlexBetween>
+                            <Typography>{values.picture.name}</Typography>
+                            <EditOutlinedIcon />
+                          </FlexBetween>
+                        )}
+                      </Box>
+                    )}
+                  </Dropzone>
+                </Box>
               </>
             )}
 
@@ -311,7 +355,6 @@ const Form = ({ type }) => {
       )}
     </Formik>
   );
-  
 };
 
 // הגדרת סוגי הפרופס עבור Form
