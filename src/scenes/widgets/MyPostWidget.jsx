@@ -17,6 +17,9 @@ import {
     Button,
     IconButton,
     useMediaQuery,
+    RadioGroup,
+    FormControlLabel,
+    Radio
 } from "@mui/material";
 
 import FlexBetween from "components/FlexBetween";
@@ -25,7 +28,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 
-const MyPostWidget = ( ) => {
+const MyPostWidget = () => {
     const dispatch = useDispatch();
     const [isImage, setIsImage] = useState(false);
     const [isVideo, setIsVideo] = useState(false);
@@ -34,17 +37,17 @@ const MyPostWidget = ( ) => {
     const [post, setPost] = useState("");
     const [title, setTitle] = useState("");
     const [location, setLocation] = useState("");
+    const [region, setRegion] = useState(""); // מצב מקומי לשמירת האזור הנבחר
     const { palette } = useTheme();
     const user = useSelector((state) => state.user);
-    console.log("User Data:", user);
     const { id } = useSelector((state) => state.user);
-    console.log("User ID:", id);
     const token = useSelector((state) => state.token);
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
 
     const handlePost = async () => {
+        console.log("Region selected:", region);
         const formData = new FormData();
         formData.append("userId", id);
         formData.append("description", post);
@@ -58,28 +61,26 @@ const MyPostWidget = ( ) => {
         }
         formData.append("title", title);
         formData.append("location", location);
+        formData.append("region", region); // הוספת האזור לנתונים הנשלחים
 
-        console.log(formData);
-
-        const response = await fetch("https://server-triptips.onrender.com/posts", {
+        const response = await fetch("http://localhost:3001/posts", {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
             body: formData,
         });
         const posts = await response.json();
-        console.log(posts);
         dispatch(setPosts({ posts }));
         setImage(null);
         setVideo(null);
         setPost("");
         setTitle("");
         setLocation("");
+        setRegion(""); // איפוס הבחירה לאחר שליחת הפוסט
     };
 
     return (
         <WidgetWrapper>
             <FlexBetween gap="1.5rem">
-            {/* <UserImage image={picturePath} /> */}
                 <InputBase
                     placeholder="Title"
                     onChange={(e) => setTitle(e.target.value)}
@@ -116,6 +117,18 @@ const MyPostWidget = ( ) => {
                     }}
                 />
             </FlexBetween>
+
+            <RadioGroup
+                value={region}
+                onChange={(e) => setRegion(e.target.value)}
+                row
+                sx={{ marginTop: "1rem" }}
+            >
+                <FormControlLabel value="north" control={<Radio />} label="North" />
+                <FormControlLabel value="center" control={<Radio />} label="Center" />
+                <FormControlLabel value="south" control={<Radio />} label="South" />
+            </RadioGroup>
+
             {(isImage || isVideo) && (
                 <Box
                     border={`1px solid ${medium}`}
@@ -200,7 +213,7 @@ const MyPostWidget = ( ) => {
                 </FlexBetween>
 
                 <Button
-                    disabled={ !(image || video) || !title || !location}
+                    disabled={!(image || video) || !title || !location || !region}
                     onClick={handlePost}
                     sx={{
                         color: "#fff",
@@ -215,9 +228,4 @@ const MyPostWidget = ( ) => {
     );
 };
 
-// MyPostWidget.propTypes = {
-//     picturePath: PropTypes.string,
-// };
-
 export default MyPostWidget;
-

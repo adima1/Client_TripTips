@@ -35,7 +35,7 @@ const EditProfileForm = ({ open, handleClose, currentUser, onSave, token }) => {
 
   const handleFormSubmit = async (values, onSubmitProps) => {
     try {
-      const response = await fetch(`https://server-triptips.onrender.com/users/${currentUser._id}`, {
+      const response = await fetch(`http://localhost:3001/users/${currentUser._id}`, {
         method: "PATCH",
         headers: { 
           Authorization: `Bearer ${token}`,

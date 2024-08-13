@@ -7,6 +7,7 @@ import SearchPage from "scenes/searchPage";
 import RatingPage from "scenes/ratingPage";
 import EntryPage from "scenes/entryPage";
 import UploadPost from "scenes/uploatPost";
+import SearchPageNoUser from "scenes/searchPageNoUser";
 
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -50,8 +51,11 @@ function App() {
             />
             {/*<Route path="/home" element={<HomePage />} />  */}
 
-            {/*  עבור דף חיפוש>*/}
+            {/*דף חיפוש למשתמשים */}
             <Route path="/search" element={<SearchPage />} />
+
+            {/*דף חיפוש לאורחים */}
+            <Route path="/searchGuess" element={<SearchPageNoUser />} />
 
              {/*  עבור דף דירוג>*/}
              <Route path="/rating" element={<RatingPage />} />
