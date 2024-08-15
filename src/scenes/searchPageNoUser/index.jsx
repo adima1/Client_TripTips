@@ -1,12 +1,10 @@
 import { Box, useMediaQuery, RadioGroup, FormControlLabel, Radio, Typography, Button } from "@mui/material";
-import { useSelector } from "react-redux";
 import React, { useState } from "react";
-import PostsWidget from "scenes/widgets/PostsWidgetUserSearch";
-import NavbarSearch from "scenes/navbar_serch_user";
+import PostsWidgetNoUserSearch from "scenes/widgets/PostsWidgetNoUserSearch";
+import NavbarSearchNoUser from "scenes/navbar_search_no_user";
 
 const SearchPage = () => {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-    const { _id, picturePath } = useSelector((state) => state.user);
     const [region, setRegion] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -20,6 +18,7 @@ const SearchPage = () => {
 
     const resetFilter = () => {
         setRegion(""); // איפוס הסינון לפי אזור
+        setSearchTerm(""); // איפוס מונח החיפוש
     };
 
     return (
@@ -31,7 +30,7 @@ const SearchPage = () => {
                 p: 2,
             }}
         >
-            <NavbarSearch onSearchChange={handleSearchChange} />
+            <NavbarSearchNoUser onSearchChange={handleSearchChange} />
             <Box
                 sx={{
                     maxWidth: "700px",
@@ -62,11 +61,11 @@ const SearchPage = () => {
                         ml: 2,
                         fontSize: "0.875rem",
                         padding: "6px 12px",
-                        borderColor: "#0097A7", // צבע המסגרת
-                        color: "#0097A7", // צבע הטקסט
+                        borderColor: "#0097A7", 
+                        color: "#0097A7", 
                         "&:hover": {
-                            backgroundColor: "#e0f7fa", // צבע רקע בזמן hover
-                            borderColor: "#004e5a", // צבע המסגרת בזמן hover
+                            backgroundColor: "#e0f7fa", 
+                            borderColor: "#004e5a", 
                         },
                     }}
                 >
@@ -80,7 +79,7 @@ const SearchPage = () => {
                     px: isNonMobileScreens ? 4 : 2,
                 }}
             >
-                <PostsWidget userId={_id} userPicturePath={picturePath} region={region} searchTerm={searchTerm} />
+                <PostsWidgetNoUserSearch region={region} searchTerm={searchTerm} />
             </Box>
         </Box>
     );

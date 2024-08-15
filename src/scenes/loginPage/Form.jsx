@@ -104,7 +104,7 @@ const Form = ({ type }) => {
     }
     
     const savedUserResponse = await fetch(
-      "https://server-triptips.onrender.com/auth/register",
+      "http://localhost:3001/auth/register",
       {
         method: "POST",
         body: formData,
@@ -122,7 +122,9 @@ const Form = ({ type }) => {
   // פונקציה לטיפול בכניסה
   const login = async (values, onSubmitProps) => {
     try {
-      const loggedInResponse = await fetch("https://server-triptips.onrender.com/auth/login", {
+
+      console.log("pass:", values.password);
+      const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

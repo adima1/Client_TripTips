@@ -126,7 +126,7 @@ const EntryPage = () => {
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            onClick={() => handleNavigation("/search")}
+            onClick={() => handleNavigation("/searchGuess")}
           >
             Continue as Guest
           </button>

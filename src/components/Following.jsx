@@ -1,19 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types"; // ייבוא PropTypes
-import { PersonAddOutlined, PersonRemoveOutlined, Star } from "@mui/icons-material"; // ייבוא אייקון כוכב
+import { PersonAddOutlined, PersonRemoveOutlined, ShareOutlined, Star} from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setFriends } from "state";
+import { setFollowing } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
-const Friend = ({ friendId, name, subtitle, userPicturePath, stars }) => { 
+const Follow = ({ followingId, name, subtitle, userPicturePath, stars }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { _id } = useSelector((state) => state.user);
+  const { id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends);
+  const following = useSelector((state) => state.user.following);
+  const loggedInUserId = useSelector((state) => state.user.id);
 
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
@@ -21,11 +22,14 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, stars }) => {
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
-  const isFriend = friends.find((friend) => friend._id === friendId);
+  console.log(following);
+  const isFollowing = following.find((following) => following._id === followingId);
+ console.log(isFollowing, followingId);
+ console.log("Following array:", JSON.stringify(following, null, 2));
 
-  const patchFriend = async () => {
+  const patchFollowing = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
+      `http://localhost:3001/users/${id}/${followingId}`,
       {
         method: "PATCH",
         headers: {
@@ -35,8 +39,10 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, stars }) => {
       }
     );
     const data = await response.json();
-    dispatch(setFriends({ friends: data }));
+    dispatch(setFollowing({ following: data }));
+    window.location.reload();
   };
+
 
   return (
     <FlexBetween>
@@ -44,7 +50,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, stars }) => {
         <UserImage image={userPicturePath} size="55px" />
         <Box
           onClick={() => {
-            navigate(`/profile/${friendId}`);
+            navigate(`/profile/${followingId}`);
             navigate(0);
           }}
         >
@@ -59,7 +65,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, stars }) => {
               },
             }}
           >
-            {name} 
+            {name}
             <Box display="flex" alignItems="center" ml={2}>
               <Star color="primary" />
               <Typography variant="body1" ml={1}>{stars || 0} stars</Typography>
@@ -70,27 +76,30 @@ const Friend = ({ friendId, name, subtitle, userPicturePath, stars }) => {
           </Typography>
         </Box>
       </FlexBetween>
+      
+    {followingId !== loggedInUserId && (
       <IconButton
-        onClick={() => patchFriend()}
+        onClick={() => patchFollowing()}
         sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
       >
-        {isFriend ? (
+        {isFollowing ? (
           <PersonRemoveOutlined sx={{ color: primaryDark }} />
         ) : (
           <PersonAddOutlined sx={{ color: primaryDark }} />
         )}
       </IconButton>
+    )}
     </FlexBetween>
   );
 };
 
-// הגדרת PropTypes עבור רכיב Friend
-Friend.propTypes = {
-  friendId: PropTypes.string.isRequired,
+// הגדרת PropTypes עבור רכיב 
+Follow.propTypes = {
+  followingId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired,
   userPicturePath: PropTypes.string.isRequired,
   stars: PropTypes.number.isRequired, // הגדרת PropTypes עבור מספר הכוכבים
 };
 
-export default Friend;
+export default Follow;

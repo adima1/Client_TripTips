@@ -23,6 +23,10 @@ import Navbar from "scenes/navbar";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import StatisticsWidget from "scenes/widgets/StatisticsWidget";
 import EditProfileForm from "./EditProfileForm";
+import UserWidget from "scenes/widgets/UserWidget";
+import FollowingListWidget from "scenes/widgets/FollowingListWidget";
+import FollowersListWidget from "scenes/widgets/FollowersListWidget";
+
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -39,7 +43,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
 
   const getUser = useCallback(async () => {
-    const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
+    const response = await fetch(`http://localhost:3001/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -84,7 +88,7 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async (updatedProfile) => {
     try {
-      const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
+      const response = await fetch(`https://localhost:3001/users/${userId}`, {
         method: "PATCH",
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -122,7 +126,7 @@ const ProfilePage = () => {
       >
         <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
           <Avatar
-            src={`https://server-triptips.onrender.com/assets/${user.picturePath}`}
+            src={`https://localhost:3001/assets/${user.picturePath}`}
             sx={{ width: 150, height: 150, mb: 2 }}
           />
           <Typography variant="h4">{user.firstName} {user.lastName}</Typography>
@@ -180,29 +184,58 @@ const ProfilePage = () => {
         </Box>
       </Box>
 
+          {/* הצגת חלונית של משתמשים שעוקבים אחריי */}
       <Dialog open={followersOpen} onClose={handleFollowersClose}>
         <DialogTitle>
-          followers
           <IconButton
             aria-label="close"
-            onClick={handleFollowersClose}
+            onClick={
+              
+              handleFollowersClose}
             sx={{ position: "absolute", right: 8, top: 8 }}
           >
             <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent>
+          <Box m="2rem 0" />
+          <FollowersListWidget userId={userId} />
           <List>
             {user.followers?.map((follower) => (
               <ListItem key={follower._id}>
-                <ListItemText primary={`${follower.firstName} ${follower.lastName}`} />
+                {/* <ListItemText primary={`${follower.firstName} ${follower.lastName}`} /> */}
               </ListItem>
             ))}
           </List>
         </DialogContent>
       </Dialog>
 
+          {/* הצגת חלונית משתמשים שאני עוקב אחריהם */}
       <Dialog open={followingOpen} onClose={handleFollowingClose}>
+        <DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleFollowingClose}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Box m="2rem 0" />
+          <FollowingListWidget userId={userId} />
+          <List>
+            {user.following?.map((following) => (
+              <ListItem key={following._id}>
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+      </Dialog>
+
+      
+
+      {/* <Dialog open={followingOpen} onClose={handleFollowingClose}>
         <DialogTitle>
           following
           <IconButton
@@ -222,7 +255,7 @@ const ProfilePage = () => {
             ))}
           </List>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       <EditProfileForm
         open={editProfileOpen}

@@ -11,7 +11,8 @@ import {
 } from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme, Modal, TextField, Button } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
-import Friend from "components/Friend";
+// import Friend from "components/Friend";
+import Following from "components/Following";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +33,7 @@ const PostWidget = ({
   saved,
   shared,
   comments,
-  userRating,
+  stars,
 }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -64,7 +65,7 @@ const PostWidget = ({
 
   const patchLike = async () => {
     try {
-      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/like`, {
+      const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -86,7 +87,7 @@ const PostWidget = ({
 
   const patchSave = async () => {
     try {
-      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/save`, {
+      const response = await fetch(`http://localhost:3001/posts/${postId}/save`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -108,7 +109,7 @@ const PostWidget = ({
 
   const patchShare = async () => {
     try {
-      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/share`, {
+      const response = await fetch(`http://localhost:3001/posts/${postId}/share`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -130,7 +131,7 @@ const PostWidget = ({
 
   const deletePost = async () => {
     try {
-      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/delete`, {
+      const response = await fetch(`http://localhost:3001/posts/${postId}/delete`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -149,7 +150,7 @@ const PostWidget = ({
 
   const updatePost = async () => {
     try {
-      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/update`, {
+      const response = await fetch(`http://localhost:3001/posts/${postId}/update`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -182,11 +183,19 @@ const PostWidget = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Friend
+      {/* <Friend
         friendId={postUserId}
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
+        stars = {stars}
+      /> */}
+      <Following
+        followingId={postUserId}
+        name={name}
+        subtitle={location}
+        userPicturePath={userPicturePath}
+        stars = {stars}
       />
       <Typography color={main} sx={{ mt: "1rem", fontWeight: "bold" }}>
         {title} 
@@ -201,7 +210,7 @@ const PostWidget = ({
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`https://server-triptips.onrender.com/assets/${picturePath}`}
+            src={`http://localhost:3001/assets/${picturePath}`}
           />
           {loggedInUserId === postUserId && isHovered && (
             <Box
@@ -231,14 +240,6 @@ const PostWidget = ({
               </Box>
             </Box>
           )}
-          <Box position="absolute" top="10px" right="10px">
-            <IconButton>
-              <StarOutlined sx={{ color: "gold" }} />
-            </IconButton>
-            <Typography variant="body2" color="white">
-              {userRating}
-            </Typography>
-          </Box>
         </Box>
       )}
 
@@ -263,18 +264,13 @@ const PostWidget = ({
             </IconButton>
             <Typography>{savedCount}</Typography>
           </FlexBetween>
-
-          <IconButton onClick={patchShare}>
-            <ShareOutlined />
-          </IconButton>
-          <Typography>{sharedCount}</Typography>
         </FlexBetween>
 
         <FlexBetween gap="0.3rem">
-          <IconButton>
-            <ChatBubbleOutlineOutlined />
+        <IconButton onClick={patchShare}>
+            <ShareOutlined />
           </IconButton>
-          <Typography>{comments.length}</Typography>
+          <Typography>{sharedCount}</Typography>
         </FlexBetween>
       </FlexBetween>
 
@@ -347,7 +343,7 @@ PostWidget.propTypes = {
   saved: PropTypes.object,
   shared: PropTypes.object,
   comments: PropTypes.array.isRequired,
-  userRating: PropTypes.number.isRequired,
+  stars: PropTypes.number.isRequired,
 };
 
 export default PostWidget;

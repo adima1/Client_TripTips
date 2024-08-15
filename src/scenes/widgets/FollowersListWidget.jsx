@@ -1,40 +1,46 @@
 import React, { useEffect, useCallback } from "react";
 import { Box, Typography, useTheme } from "@mui/material";
-import Friend from "components/Friend";
+import Followers from "components/Followers";
+
 import WidgetWrapper from "components/WidgetWrapper";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriends } from "state";
+import { setFollowers } from "state";
 import PropTypes from "prop-types";
 
-const FriendListWidget = ({ userId }) => {
+const FollowersListWidget = ({ userId }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends);
+  const followers = useSelector((state) => state.user.followers);
 
-  const getFriends = useCallback(async () => {
+  const getFollowers = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/users/${userId}/friends`,
+        `http://localhost:3001/users/${userId}/followers`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch friends");
+        throw new Error("Failed to fetch followers");
       }
       const data = await response.json();
-      dispatch(setFriends({ friends: data }));
+      console.log("Followers data:", data); 
+      dispatch(setFollowers({ followers: data }));
     } catch (error) {
-      console.error("Error fetching friends:", error);
+      console.error("Error fetching followers:", error);
       // Handle error (e.g., show error message to user)
     }
+
   }, [userId, token, dispatch]);
 
   useEffect(() => {
-    getFriends();
-  }, [getFriends]);
+    getFollowers();
+  }, [getFollowers]);
+
+
+
 
   return (
     <WidgetWrapper>
@@ -44,16 +50,16 @@ const FriendListWidget = ({ userId }) => {
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
       >
-        Friend List
+        Followers List 
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
-        {friends.map((friend) => (
-          <Friend
-            key={friend._id}
-            friendId={friend._id}
-            name={`${friend.firstName} ${friend.lastName}`}
-            subtitle={friend.occupation}
-            userPicturePath={friend.picturePath}
+        {followers.map((follow) => (
+          <Followers
+            key={follow._id}
+            followerId={follow._id}
+            name={`${follow.firstName} ${follow.lastName}`}
+            subtitle={follow.occupation}
+            userPicturePath={follow.picturePath}
           />
         ))}
       </Box>
@@ -61,8 +67,8 @@ const FriendListWidget = ({ userId }) => {
   );
 };
 
-FriendListWidget.propTypes = {
+FollowersListWidget.propTypes = {
   userId: PropTypes.string.isRequired,
 };
 
-export default FriendListWidget;
+export default FollowersListWidget;

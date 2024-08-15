@@ -39,6 +39,30 @@ export const authSlice = createSlice({
         console.error("user friends non-existent :("); // הודעת שגיאה אם אין משתמש
       }
     },
+
+    setFollowing: (state, action) => {
+      if (state.user) 
+      {
+        state.user.following = action.payload.following;
+      } 
+      else 
+      {
+        console.error("user following non-existent :("); // הודעת שגיאה אם אין משתמש
+      }
+    },
+
+    setFollowers: (state, action) => {
+      if (state.user) 
+      {
+        state.user.followers = action.payload.followers;
+      } 
+      else 
+      {
+        console.error("user followers non-existent :("); // הודעת שגיאה אם אין משתמש
+      }
+    },
+
+
     // פעולה להגדרת רשימת הפוסטים
     setPosts: (state, action) => {
       state.posts = action.payload.posts;
@@ -55,7 +79,7 @@ export const authSlice = createSlice({
 });
 
 // ייצוא הפעולות (actions) לייבוא ושימוש בקומפוננטות אחרות
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost} =
+export const { setMode, setLogin, setLogout, setFriends, setFollowers, setFollowing, setPosts, setPost} =
   authSlice.actions;
 
 // ייצוא ה-reducer לשימוש בקונפיגורציית ה-store
