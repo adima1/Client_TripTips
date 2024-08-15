@@ -10,7 +10,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
   const token = useSelector((state) => state.token);
 
   const getAllPosts = async () => {
-    const response = await fetch(`http://localhost:3001/posts?searchTerm=${searchTerm}`, {
+    const response = await fetch(`http://localhost:3001/posts?searchTerm=${encodeURIComponent(searchTerm)}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -19,7 +19,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
   };
 
   const getPostsByRegion = async () => {
-    const response = await fetch(`http://localhost:3001/posts/region?region=${region}&searchTerm=${searchTerm}`, {
+    const response = await fetch(`http://localhost:3001/posts/region?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -29,7 +29,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 
   const getUserPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts?region=${region}&searchTerm=${searchTerm}`,
+      `http://localhost:3001/posts/${userId}/posts?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -41,7 +41,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 
   const getLikedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/likes?region=${region}&searchTerm=${searchTerm}`,
+      `http://localhost:3001/posts/${userId}/likes?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -53,7 +53,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 
   const getSavedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/saves?region=${region}&searchTerm=${searchTerm}`,
+      `http://localhost:3001/posts/${userId}/saves?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -65,7 +65,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 
   const getSharedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/shares?region=${region}&searchTerm=${searchTerm}`,
+      `http://localhost:3001/posts/${userId}/shares?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },

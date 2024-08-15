@@ -4,56 +4,37 @@ import { setPosts } from "state";
 import PostWidgetNoUser from "./PostWidgetNoUser";
 import PropTypes from "prop-types";
 
-const PostsWidgetNoUserSearch = ({ region, searchTerm = "" }) => {
+const PostsWidgetNoUserSearch = ({ region, searchTerm }) => { 
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts || []);
 
-  // בקשת כל הפוסטים עבור אורחים
   const getAllPosts = async () => {
-    try {
-      console.log(`Fetching all posts with searchTerm: ${searchTerm}`);
-      const response = await fetch(`http://localhost:3001/posts?searchTerm=${encodeURIComponent(searchTerm)}`, {
-        method: "GET",
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      console.log("Posts fetched:", data); // הדפסת הנתונים שהתקבלו
-      dispatch(setPosts({ posts: data }));
-    } catch (error) {
-      console.error("There has been a problem with your fetch operation:", error);
-    }
+    const response = await fetch(`http://localhost:3001/posts/guest?searchTerm=${encodeURIComponent(searchTerm)}`, {
+      method: "GET",
+    });
+    const data = await response.json();
+    dispatch(setPosts({ posts: data }));
   };
 
-  // בקשת הפוסטים לפי אזור עבור אורחים
   const getPostsByRegion = async () => {
-    try {
-      console.log(`Fetching posts by region: ${region} with searchTerm: ${searchTerm}`);
-      const response = await fetch(`http://localhost:3001/posts/region?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`, {
-        method: "GET",
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      console.log("Posts fetched by region:", data); // הדפסת הנתונים שהתקבלו
-      dispatch(setPosts({ posts: data }));
-    } catch (error) {
-      console.error("There has been a problem with your fetch operation:", error);
-    }
+    const response = await fetch(`http://localhost:3001/posts/region/guest?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`, {
+      method: "GET",
+    });
+    const data = await response.json();
+    dispatch(setPosts({ posts: data }));
   };
 
   useEffect(() => {
+    console.log("Search term being used:", searchTerm);
     if (region) {
-      getPostsByRegion(); // כאשר נבחר אזור, מביאים פוסטים לפי האזור ומונח החיפוש
+      getPostsByRegion(); 
     } else {
-      getAllPosts(); // כאשר לא נבחר אזור, מביאים את כל הפוסטים עם אפשרות לחיפוש לפי מונח
+      getAllPosts(); 
     }
   }, [region, searchTerm]);
 
   if (!Array.isArray(posts) || posts.length === 0) {
-    return <div>No posts found for the selected filters</div>; 
+    return <div>oopsi not found :)</div>; 
   }
 
   return (
@@ -66,7 +47,9 @@ const PostsWidgetNoUserSearch = ({ region, searchTerm = "" }) => {
           title,
           description,
           picturePath,
+          userPicturePath,
           likes,
+          location, // הוספת location לפוסט
         }) => (
           <PostWidgetNoUser
             key={_id} 
@@ -74,7 +57,9 @@ const PostsWidgetNoUserSearch = ({ region, searchTerm = "" }) => {
             title={title} 
             description={description} 
             picturePath={picturePath} 
+            userPicturePath={userPicturePath}
             likeCount={Object.keys(likes).length} 
+            location={location} // העברת location ל-PostWidgetNoUser
           />
         )
       )}

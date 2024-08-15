@@ -1,5 +1,6 @@
 import { useState } from "react";
 import React from "react";
+import PropTypes from "prop-types"; // ייבוא PropTypes
 import {
   Box,
   IconButton,
@@ -15,8 +16,9 @@ import { setMode } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 
-const NavbarSearchNoUser = () => {
+const NavbarSearchNoUser = ({ onSearchChange }) => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // state למונח החיפוש
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -26,6 +28,20 @@ const NavbarSearchNoUser = () => {
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
   const alt = theme.palette.background.alt;
+
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value); // עדכון ה-state המקומי
+    if (onSearchChange) {
+      onSearchChange(value); // קריאה לפונקציה המועברת מ-`SearchPage` לעדכון מונח החיפוש
+    }
+  };
+
+  const handleSearchClick = () => {
+    if (onSearchChange) {
+      onSearchChange(searchTerm); // קריאה לפונקציה המועברת כשמשתמש לוחץ על החיפוש
+    }
+  };
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -51,8 +67,12 @@ const NavbarSearchNoUser = () => {
             gap="3rem"
             padding="0.1rem 1.5rem"
           >
-            <InputBase placeholder="Search..." />
-            <IconButton>
+            <InputBase
+              placeholder="Search..."
+              value={searchTerm}  // קישור הערך לשדה החיפוש
+              onChange={handleSearchChange} // הוספת אירוע שינוי לשדה החיפוש
+            />
+            <IconButton onClick={handleSearchClick}> {/* חיבור הכפתור לפונקציית החיפוש */}
               <Search />
             </IconButton>
           </FlexBetween>
@@ -69,12 +89,10 @@ const NavbarSearchNoUser = () => {
             )}
           </IconButton>
 
-          {/* כפתור הרשמה */}
           <Button variant="contained" color="primary" onClick={() => navigate("/login?type=register")}>
             Sign Up
           </Button>
 
-          {/* כפתור התחברות */}
           <Button variant="outlined" color="primary" onClick={() => navigate("/login")}>
             Log In
           </Button>
@@ -116,12 +134,10 @@ const NavbarSearchNoUser = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            {/* כפתור הרשמה */}
             <Button variant="contained" color="primary" onClick={() => navigate("/login?type=register")}>
               Sign Up
             </Button>
 
-            {/* כפתור התחברות */}
             <Button variant="outlined" color="primary" onClick={() => navigate("/login")}>
               Log In
             </Button>
@@ -130,6 +146,10 @@ const NavbarSearchNoUser = () => {
       )}
     </FlexBetween>
   );
+};
+
+NavbarSearchNoUser.propTypes = {
+  onSearchChange: PropTypes.func, // הוספת בדיקת PropTypes ל-onSearchChange
 };
 
 export default NavbarSearchNoUser;
