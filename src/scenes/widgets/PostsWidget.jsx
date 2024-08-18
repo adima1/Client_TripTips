@@ -42,13 +42,13 @@ const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = fal
       if (isProfile) {
         fetchPosts(`https://server-triptips.onrender.com/posts/${userId}/post`, "user");
       } else if (isLiked) {
-        fetchPosts(`https://server-triptips.onrender.com/${userId}/likes`, "liked");
+        fetchPosts(`https://server-triptips.onrender.com/posts/${userId}/likes`, "liked");
       } else if (isSaved) {
-        fetchPosts(`https://server-triptips.onrender.com/${userId}/saves`, "saved");
+        fetchPosts(`https://server-triptips.onrender.com/posts/${userId}/saves`, "saved");
       } else if (isShared) {
-        fetchPosts(`https://server-triptips.onrender.com/${userId}/shares`, "shared");
+        fetchPosts(`https://server-triptips.onrender.com/posts/${userId}/shares`, "shared");
       } else {
-        fetchPosts(`https://server-triptips.onrender.com/${userId}/following`, "following");
+        fetchPosts(`https://server-triptips.onrender.com/posts/${userId}/following`, "following");
       }
     }
   }, [userId, isProfile, isLiked, isSaved, isShared, token]);
