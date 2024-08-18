@@ -71,11 +71,11 @@ function App() {
             <Route path="/upload" element={<UploadPost />} />
 
             {/* Route עבור דף פרופיל המשתמש, אם המשתמש מחובר */}
-            <Route path="/profile/:userId" element={<ProfilePage />} />
-            {/* <Route
+            {/* <Route path="/profile/:userId" element={<ProfilePage />} /> */}
+            <Route
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
-            /> */}
+            />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
