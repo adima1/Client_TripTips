@@ -21,12 +21,12 @@ import {
   Close,
   Add,
   Star,
-  Person,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import { Avatar } from "@mui/material";
 
 const NavbarSearch = ({ onSearchChange }) => { // קבלת onSearchChange כ-`prop`
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -37,6 +37,7 @@ const NavbarSearch = ({ onSearchChange }) => { // קבלת onSearchChange כ-`pr
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const userPicturePath = user.picturePath;
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -52,7 +53,13 @@ const NavbarSearch = ({ onSearchChange }) => { // קבלת onSearchChange כ-`pr
     const value = event.target.value;
     setSearchTerm(value); // עדכון ה-state המקומי
     if (onSearchChange) {
-      onSearchChange(value); // קריאה לפונקציה המועברת מ-`SearchPage` לעדכון מונח החיפוש
+      onSearchChange(value); // קריאה לפונקציה המועברת מ-SearchPage לעדכון מונח החיפוש
+    }
+  };
+
+  const handleSearchClick = () => {
+    if (onSearchChange) {
+      onSearchChange(searchTerm); // קריאה לפונקציה המועברת כשמשתמש לוחץ על החיפוש
     }
   };
 
@@ -85,7 +92,7 @@ const NavbarSearch = ({ onSearchChange }) => { // קבלת onSearchChange כ-`pr
               value={searchTerm}  // קישור הערך לשדה החיפוש
               onChange={handleSearchChange} // הוספת אירוע שינוי לשדה החיפוש
             />
-            <IconButton>
+            <IconButton onClick={handleSearchClick}> {/* חיבור הכפתור לפונקציית החיפוש */}
               <Search />
             </IconButton>
           </FlexBetween>
@@ -140,23 +147,26 @@ const NavbarSearch = ({ onSearchChange }) => { // קבלת onSearchChange כ-`pr
             <Star sx={{ fontSize: "25px" }} />
           </IconButton>
 
-          <IconButton
+            {/* הוספת אייקון פרופיל ושם המשתמש */}
+            <Box
             onClick={() => navigate(`/profile/${user.id}`)}
             sx={{
-              color: dark,
-              boxShadow: isAddHovered ? `0px 4px 8px ${primaryLight}` : "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              cursor: "pointer",
               "&:hover": {
-                boxShadow: `0px 4px 8px ${primaryLight}`,
+                opacity: 0.8,
               },
-              "&:active": {
-                boxShadow: `0px 4px 8px ${primaryLight}`,
-              },
-              transition: "box-shadow 0.3s",
             }}
           >
-            <Person sx={{ fontSize: "25px" }} />
-            <Typography sx={{ marginLeft: "0.5rem" }}>{fullName}</Typography>
-          </IconButton>
+            <Avatar
+              // alt={fullName}
+              src={`https://server-triptips.onrender.com/assets/${userPicturePath}`}
+              sx={{ width: 32, height: 32 }}
+            />
+            {/* <Typography>{fullName}</Typography> */}
+          </Box>
 
           <FormControl variant="standard" value={fullName}>
             <Select
@@ -265,23 +275,25 @@ const NavbarSearch = ({ onSearchChange }) => { // קבלת onSearchChange כ-`pr
             >
               <Star sx={{ fontSize: "25px" }} />
             </IconButton>
-            <IconButton
+            <Box
               onClick={() => navigate(`/profile/${user.id}`)}
               sx={{
-                color: dark,
-                boxShadow: isAddHovered ? `0px 4px 8px ${primaryLight}` : "none",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                cursor: "pointer",
                 "&:hover": {
-                  boxShadow: `0px 4px 8px ${primaryLight}`,
+                  opacity: 0.8,
                 },
-                "&:active": {
-                  boxShadow: `0px 4px 8px ${primaryLight}`,
-                },
-                transition: "box-shadow 0.3s",
               }}
             >
-              <Person sx={{ fontSize: "25px" }} />
-              <Typography sx={{ marginLeft: "0.5rem" }}>{fullName}</Typography>
-            </IconButton>
+              <Avatar
+                // alt={fullName}
+                src={`https://server-triptips.onrender.com/assets/${userPicturePath}`}
+                sx={{ width: 32, height: 32 }}
+              />
+              {/* <Typography>{fullName}</Typography> */}
+            </Box>
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}

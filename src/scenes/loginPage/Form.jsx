@@ -104,17 +104,17 @@ const Form = ({ type }) => {
     }
     
     const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
+      "https://server-triptips.onrender.com/auth/register",
       {
         method: "POST",
         body: formData,
       }
     );
     const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+    // onSubmitProps.resetForm();
 
     if (savedUser) {
-      setPageType("login");
+      await login({ login: values.email, password: values.password }, onSubmitProps);
     }
   };
 
@@ -122,21 +122,19 @@ const Form = ({ type }) => {
   // פונקציה לטיפול בכניסה
   const login = async (values, onSubmitProps) => {
     try {
-
-      console.log("pass:", values.password);
-      const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+      const loggedInResponse = await fetch("https://server-triptips.onrender.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-
+  
       if (!loggedInResponse.ok) {
-        throw new Error(`HTTP error! Status: ${loggedInResponse.status}`); // טיפול בשגיאות HTTP
+        throw new Error(`HTTP error! Status: ${loggedInResponse.status}`);
       }
-
+  
       const loggedIn = await loggedInResponse.json();
-      onSubmitProps.resetForm(); // איפוס הטופס לאחר כניסה
-
+      onSubmitProps.resetForm();
+  
       if (loggedIn) {
         dispatch(
           setLogin({
@@ -144,17 +142,24 @@ const Form = ({ type }) => {
             token: loggedIn.token,
           })
         );
-        navigate("/home"); // ניווט לעמוד הבית לאחר כניסה
+        navigate("/home");
+        return true; // החזרת ערך המציין הצלחה
       }
+      return false; // החזרת ערך המציין כישלון
     } catch (error) {
-      console.error("Error during login:", error); // הדפסת שגיאות בקונסול
+      console.error("Error during login:", error);
+      return false; // החזרת ערך המציין כישלון במקרה של שגיאה
     }
   };
 
   // פונקציה לטיפול שליחת הטופס
   const handleFormSubmit = async (values, onSubmitProps) => {
-    if (isLogin) await login(values, onSubmitProps); // טיפול בכניסה
-    if (isRegister) await register(values, onSubmitProps); // טיפול בהרשמה
+    if (isLogin) {
+      await login(values, onSubmitProps);
+    }
+    if (isRegister) {
+      await register(values, onSubmitProps);
+    }
   };
 
   // פונקציה לשינוי בין טפסי הרשמה לכניסה

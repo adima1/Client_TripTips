@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFollowers } from "state";
 import PropTypes from "prop-types";
 
-const FollowersListWidget = ({ userId }) => {
+const FollowersListWidget = ({ userId, onFollowersChange  }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
@@ -16,7 +16,7 @@ const FollowersListWidget = ({ userId }) => {
   const getFollowers = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/users/${userId}/followers`,
+        `https://server-triptips.onrender.com/users/${userId}/followers`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
@@ -26,14 +26,14 @@ const FollowersListWidget = ({ userId }) => {
         throw new Error("Failed to fetch followers");
       }
       const data = await response.json();
-      console.log("Followers data:", data); 
       dispatch(setFollowers({ followers: data }));
+      if (onFollowersChange) {
+        onFollowersChange(data.length);
+      }
     } catch (error) {
       console.error("Error fetching followers:", error);
-      // Handle error (e.g., show error message to user)
     }
-
-  }, [userId, token, dispatch]);
+  }, [userId, token, dispatch, onFollowersChange]);
 
   useEffect(() => {
     getFollowers();
@@ -60,6 +60,7 @@ const FollowersListWidget = ({ userId }) => {
             name={`${follow.firstName} ${follow.lastName}`}
             subtitle={follow.occupation}
             userPicturePath={follow.picturePath}
+            starts = {follow.starts}
           />
         ))}
       </Box>
@@ -69,6 +70,7 @@ const FollowersListWidget = ({ userId }) => {
 
 FollowersListWidget.propTypes = {
   userId: PropTypes.string.isRequired,
+  onFollowersChange: PropTypes.func,
 };
 
 export default FollowersListWidget;

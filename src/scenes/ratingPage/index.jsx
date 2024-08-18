@@ -1,49 +1,66 @@
-// import React, { useEffect, useState } from "react";
-// import { Box, Typography } from "@mui/material";
-// import { useSelector } from "react-redux";
-// import Follow from "./Follow"; // ייבוא רכיב ה-Follow
+import { Box, useMediaQuery, TextField } from "@mui/material";
+import { useSelector } from "react-redux";
+import Navbar from "scenes/navbar";
+import React, { useState, useCallback } from "react";
+import UsersListWidget from "scenes/widgets/UsersListWidget";
+import { debounce } from "lodash";
 
 const RatingPage = () => {
-//   const [users, setUsers] = useState([]);
-//   const token = useSelector((state) => state.token);
+    const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+    const { _id, picturePath } = useSelector((state) => state.user);
+    const [searchTerm, setSearchTerm] = useState("");
 
-//   useEffect(() => {
-//     const fetchUsers = async () => {
-//       const response = await fetch("http://localhost:3001/users/rating", {
-//         method: "GET",
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-//       const data = await response.json();
-//       // מיון המשתמשים לפי מספר הכוכבים מהגבוה לנמוך
-//       const sortedUsers = data.sort((a, b) => b.stars - a.stars);
-//       setUsers(sortedUsers);
-//     };
+    const debouncedSearch = useCallback(
+        debounce((term) => {
+            setSearchTerm(term);
+        }, 300),
+        []
+    );
 
-//     fetchUsers();
-//   }, [token]);
+    const handleSearchChange = (event) => {
+        debouncedSearch(event.target.value);
+    };
 
-//   return (
-//     <Box m="2rem">
-//       <Typography variant="h4" fontWeight="500" mb="2rem" textAlign="center">
-//         Users Rating
-//       </Typography>
-//       <Box display="flex" flexDirection="column" alignItems="center" gap="1.5rem">
-//         {users.map((user) => (
-//           <Follow
-//             key={user._id}
-//             followingId={user._id}
-//             name={user.firstName + " " + user.lastName}
-//             subtitle={user.occupation || ""}
-//             userPicturePath={user.picturePath || "anonymous.jpg"}
-//             stars={user.stars || 0}
-//           />
-//         ))}
-//       </Box>
-//     </Box>
-//   );
+    return (
+        <>
+            <Navbar 
+                sx={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    zIndex: 1100
+                }}
+            />
+            
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    p: 2,
+                    mt: "64px",
+                }}
+            >
+                <Box
+                    sx={{
+                        maxWidth: "700px",
+                        width: "100%",
+                        px: isNonMobileScreens ? 4 : 2,
+                    }}
+                >
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        placeholder="Search users..."
+                        onChange={handleSearchChange}
+                        sx={{ mb: 2 }}
+                    />
+                    <UsersListWidget searchTerm={searchTerm} />
+                </Box>
+            </Box>
+        </>
+    );
 };
 
 export default RatingPage;
-

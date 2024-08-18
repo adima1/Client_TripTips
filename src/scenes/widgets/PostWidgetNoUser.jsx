@@ -2,19 +2,29 @@ import { Box, Typography, Avatar } from "@mui/material";
 import WidgetWrapper from "components/WidgetWrapper";
 import PropTypes from "prop-types";
 import React from "react";
+import {  useSelector } from "react-redux";
+import { Star} from "@mui/icons-material";
 
-const PostWidgetNoUser = ({ name, title, description, picturePath, likeCount, userPicturePath, location }) => {
+
+
+const PostWidgetNoUser = ({ name, title, description, picturePath, likeCount, userPicturePath, location,
+    stars = useSelector((state) => state.user.stars),
+ }) => {
   return (
     <WidgetWrapper m="2rem 0">
       <Box display="flex" alignItems="center">
         <Avatar
           alt={name}
-          src={`http://localhost:3001/assets/${userPicturePath}`}
+          src={`https://server-triptips.onrender.com/assets/${userPicturePath}`}
           sx={{ width: 56, height: 56, mr: 2 }}
         />
         <Box>
-          <Typography variant="h5" color="primary" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h5" color="grey" sx={{ fontWeight: "bold" }}>
             {name}
+            <Box display="flex" alignItems="center" ml={2}>
+              <Star color="primary" />
+              <Typography variant="body1" ml={1}>{stars || 0} stars</Typography>
+            </Box>
           </Typography>
           {location && (
             <Typography variant="body2" color="textSecondary">
@@ -36,7 +46,7 @@ const PostWidgetNoUser = ({ name, title, description, picturePath, likeCount, us
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`http://localhost:3001/assets/${picturePath}`}
+            src={`https://server-triptips.onrender.com:3001/assets/${picturePath}`}
           />
         </Box>
       )}
@@ -55,6 +65,8 @@ PostWidgetNoUser.propTypes = {
   likeCount: PropTypes.number.isRequired,
   userPicturePath: PropTypes.string.isRequired, // נתיב תמונת הפרופיל של המשתמש שהעלה את הפוסט
   location: PropTypes.string, // הוספת location כפרופ אופציונלי
+  stars: PropTypes.number.isRequired,
+
 };
 
 export default PostWidgetNoUser;

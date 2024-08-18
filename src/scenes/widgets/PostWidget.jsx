@@ -33,11 +33,12 @@ const PostWidget = ({
   saved,
   shared,
   comments,
-  stars,
+  stars = useSelector((state) => state.user.stars),
 }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user.id);
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(() => {
@@ -65,7 +66,7 @@ const PostWidget = ({
 
   const patchLike = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/like`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -87,7 +88,7 @@ const PostWidget = ({
 
   const patchSave = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/save`, {
+      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/save`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -109,7 +110,7 @@ const PostWidget = ({
 
   const patchShare = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/share`, {
+      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/share`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -131,7 +132,7 @@ const PostWidget = ({
 
   const deletePost = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/delete`, {
+      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/delete`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -150,7 +151,7 @@ const PostWidget = ({
 
   const updatePost = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}/update`, {
+      const response = await fetch(`https://server-triptips.onrender.com/posts/${postId}/update`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -195,7 +196,7 @@ const PostWidget = ({
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
-        stars = {stars}
+        stars={stars}
       />
       <Typography color={main} sx={{ mt: "1rem", fontWeight: "bold" }}>
         {title} 
@@ -210,7 +211,7 @@ const PostWidget = ({
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`http://localhost:3001/assets/${picturePath}`}
+            src={`https://server-triptips.onrender.com/assets/${picturePath}`}
           />
           {loggedInUserId === postUserId && isHovered && (
             <Box

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types"; // ייבוא PropTypes
-import { PersonAddOutlined, PersonRemoveOutlined, ShareOutlined} from "@mui/icons-material";
+import { PersonAddOutlined, PersonRemoveOutlined, ShareOutlined, Star} from "@mui/icons-material";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { setFollowers } from "state";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 
-const Follower = ({ followerId, name, subtitle, userPicturePath }) => {
+const Follower = ({ followerId, name, subtitle, userPicturePath, stars }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useSelector((state) => state.user);
@@ -23,13 +23,14 @@ const Follower = ({ followerId, name, subtitle, userPicturePath }) => {
   const medium = palette.neutral.medium;
 
 
+
  const isFollower = followers.find((follower) => follower._id === followerId);
  console.log(isFollower, followerId);
  console.log("Followers array:", JSON.stringify(followers, null, 2));
 
  const patchFollowers = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${id}/remove-follower/${followerId}`,
+      `https://server-triptips.onrender.com/users/${id}/remove-follower/${followerId}`,
       {
         method: "PATCH",
         headers: {
@@ -40,7 +41,7 @@ const Follower = ({ followerId, name, subtitle, userPicturePath }) => {
     );
     const data = await response.json();
     dispatch(setFollowers({ followers: data }));
-    window.location.reload();
+    // window.location.reload();
   };
 
 
@@ -66,6 +67,10 @@ const Follower = ({ followerId, name, subtitle, userPicturePath }) => {
             }}
           >
             {name}
+            <Box display="flex" alignItems="center" ml={2}>
+              <Star color="primary" />
+              <Typography variant="body1" ml={1}>{stars || 0} stars</Typography>
+            </Box>
           </Typography>
           <Typography color={medium} fontSize="0.75rem">
             {subtitle}
@@ -95,6 +100,7 @@ Follower.propTypes = {
   name: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired,
   userPicturePath: PropTypes.string.isRequired,
+  stars: PropTypes.number.isRequired,
 };
 
 export default Follower;

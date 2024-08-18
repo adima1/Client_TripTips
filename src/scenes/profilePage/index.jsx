@@ -41,30 +41,61 @@ const ProfilePage = () => {
   const loggedInUserId = useSelector((state) => state.user.id);
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const dispatch = useDispatch();
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+
+
 
   const getUser = useCallback(async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await response.json();
     setUser(data);
+    setFollowersCount(data.followers?.length || 0);
+    setFollowingCount(data.following?.length || 0);
   }, [userId, token]);
-  
+
   useEffect(() => {
     getUser();
   }, [getUser]);
+
+  const handleFollowersClose = () => {
+    setFollowersOpen(false);
+    getUser(); // Refresh user data when closing followers dialog
+  };
+
+  const handleFollowingClose = () => {
+    setFollowingOpen(false);
+    getUser(); // Refresh user data when closing following dialog
+  };
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
 
   const handleFollowersOpen = () => setFollowersOpen(true);
-  const handleFollowersClose = () => setFollowersOpen(false);
+  // const handleFollowersClose = () => setFollowersOpen(false);
   const handleFollowingOpen = () => setFollowingOpen(true);
-  const handleFollowingClose = () => setFollowingOpen(false);
+  // const handleFollowingClose = () => setFollowingOpen(false);
   const handleEditProfileOpen = () => setEditProfileOpen(true);
   const handleEditProfileClose = () => setEditProfileOpen(false);
+
+  // const handleFollowUnfollow = async (targetUserId) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:3001/users/${userId}/${targetUserId}/follow`, {
+  //       method: "PATCH",
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     if (response.ok) {
+  //       const updatedFollowersCount = await response.json();
+  //       setFollowersCount(updatedFollowersCount);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating follow status:", error);
+  //   }
+  // };
 
   const handlePostClick = (post) => {
     setSelectedPost(post);
@@ -88,7 +119,7 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async (updatedProfile) => {
     try {
-      const response = await fetch(`https://localhost:3001/users/${userId}`, {
+      const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
         method: "PATCH",
         headers: { 
           Authorization: `Bearer ${token}`,
@@ -107,9 +138,11 @@ const ProfilePage = () => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
-    handleEditProfileClose();
-  };
 
+    handleEditProfileClose();
+    window.location.reload();
+
+  };
   console.log("user:", userId,"hdesk", loggedInUserId);
 
   if (!user) return null;
@@ -126,7 +159,7 @@ const ProfilePage = () => {
       >
         <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
           <Avatar
-            src={`https://localhost:3001/assets/${user.picturePath}`}
+            src={`https://server-triptips.onrender.com/assets/${user.picturePath}`}
             sx={{ width: 150, height: 150, mb: 2 }}
           />
           <Typography variant="h4">{user.firstName} {user.lastName}</Typography>
@@ -137,8 +170,8 @@ const ProfilePage = () => {
             <Button variant="outlined" onClick={handleEditProfileOpen}>edit profile</Button>
           )}
           <Box mt={2} display="flex" alignItems="center">
-            <Button onClick={handleFollowersOpen}>followers: {user.followers?.length || 0}</Button>
-            <Button onClick={handleFollowingOpen}>following: {user.following?.length || 0}</Button>
+          <Button onClick={handleFollowersOpen}>followers: {followersCount}</Button>
+          <Button onClick={handleFollowingOpen}>following: {followingCount}</Button>
             <Box display="flex" alignItems="center" ml={2}>
               <Star color="primary" />
               <Typography variant="body1" ml={1}>{user.stars || 0} stars</Typography>
@@ -199,14 +232,10 @@ const ProfilePage = () => {
         </DialogTitle>
         <DialogContent>
           <Box m="2rem 0" />
-          <FollowersListWidget userId={userId} />
-          <List>
-            {user.followers?.map((follower) => (
-              <ListItem key={follower._id}>
-                {/* <ListItemText primary={`${follower.firstName} ${follower.lastName}`} /> */}
-              </ListItem>
-            ))}
-          </List>
+          <FollowersListWidget 
+            userId={userId} 
+            onFollowersChange={(count) => setFollowersCount(count)}
+          />
         </DialogContent>
       </Dialog>
 
@@ -223,13 +252,10 @@ const ProfilePage = () => {
         </DialogTitle>
         <DialogContent>
           <Box m="2rem 0" />
-          <FollowingListWidget userId={userId} />
-          <List>
-            {user.following?.map((following) => (
-              <ListItem key={following._id}>
-              </ListItem>
-            ))}
-          </List>
+          <FollowingListWidget 
+            userId={userId} 
+            onFollowingChange={(count) => setFollowingCount(count)}
+          />
         </DialogContent>
       </Dialog>
 

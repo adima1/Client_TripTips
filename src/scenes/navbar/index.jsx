@@ -19,13 +19,13 @@ import {
   Close,
   Add,
   Star,
-  Person, // אייקון פרופיל
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import { InputBase } from "@mui/material";
+import { Avatar } from "@mui/material";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -37,6 +37,8 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const userPicturePath = user.picturePath;
+
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -155,23 +157,25 @@ const Navbar = () => {
           </IconButton>
 
           {/* הוספת אייקון פרופיל ושם המשתמש */}
-          <IconButton
+          <Box
             onClick={() => navigate(`/profile/${user.id}`)}
             sx={{
-              color: dark,
-              boxShadow: isAddHovered ? `0px 4px 8px ${primaryLight}` : "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              cursor: "pointer",
               "&:hover": {
-                boxShadow: `0px 4px 8px ${primaryLight}`,
+                opacity: 0.8,
               },
-              "&:active": {
-                boxShadow: `0px 4px 8px ${primaryLight}`,
-              },
-              transition: "box-shadow 0.3s",
             }}
           >
-            <Person sx={{ fontSize: "25px" }} />
-            <Typography sx={{ marginLeft: "0.5rem" }}>{fullName}</Typography>
-          </IconButton>
+            <Avatar
+              // alt={fullName}
+              src={`https://server-triptips.onrender.com/assets/${userPicturePath}`}
+              sx={{ width: 32, height: 32 }}
+            />
+            {/* <Typography>{fullName}</Typography> */}
+          </Box>
 
           <FormControl variant="standard" value={fullName}>
             <Select
@@ -301,23 +305,25 @@ const Navbar = () => {
             >
               <ErrorOutline sx={{ fontSize: "25px" }} />
             </IconButton>
-            <IconButton
-              onClick={() => navigate("/profile")}
+            <Box
+              onClick={() => navigate(`/profile/${user.id}`)}
               sx={{
-                color: dark,
-                boxShadow: isAddHovered ? `0px 4px 8px ${primaryLight}` : "none",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                cursor: "pointer",
                 "&:hover": {
-                  boxShadow: `0px 4px 8px ${primaryLight}`,
+                  opacity: 0.8,
                 },
-                "&:active": {
-                  boxShadow: `0px 4px 8px ${primaryLight}`,
-                },
-                transition: "box-shadow 0.3s",
               }}
             >
-              <Person sx={{ fontSize: "25px" }} />
-              <Typography sx={{ marginLeft: "0.5rem" }}>{fullName}</Typography>
-            </IconButton>
+              <Avatar
+                // alt={fullName}
+                src={`https://server-triptips.onrender.com/assets/${userPicturePath}`}
+                sx={{ width: 32, height: 32 }}
+              />
+              {/* <Typography>{fullName}</Typography> */}
+            </Box>
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}

@@ -27,6 +27,8 @@ import Dropzone from "react-dropzone";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+import { useNavigate } from "react-router-dom";
+
 
 const MyPostWidget = () => {
     const dispatch = useDispatch();
@@ -45,6 +47,8 @@ const MyPostWidget = () => {
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
+    const navigate = useNavigate();
+
 
     const handlePost = async () => {
         console.log("Region selected:", region);
@@ -63,7 +67,7 @@ const MyPostWidget = () => {
         formData.append("location", location);
         formData.append("region", region); // הוספת האזור לנתונים הנשלחים
 
-        const response = await fetch("http://localhost:3001/posts", {
+        const response = await fetch("https://server-triptips.onrender.com/posts", {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
             body: formData,
@@ -76,6 +80,7 @@ const MyPostWidget = () => {
         setTitle("");
         setLocation("");
         setRegion(""); // איפוס הבחירה לאחר שליחת הפוסט
+        navigate("/home");
     };
 
     return (
@@ -222,6 +227,7 @@ const MyPostWidget = () => {
                     }}
                 >
                     POST
+
                 </Button>
             </FlexBetween>
         </WidgetWrapper>

@@ -8,6 +8,7 @@ import RatingPage from "scenes/ratingPage";
 import EntryPage from "scenes/entryPage";
 import UploadPost from "scenes/uploatPost";
 import SearchPageNoUser from "scenes/searchPageNoUser";
+import RatingPageNoUser from "scenes/ratingPageNoUser";
 
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -57,6 +58,9 @@ function App() {
             {/*דף חיפוש לאורחים */}
             <Route path="/searchGuess" element={<SearchPageNoUser />} />
 
+            {/*דף דירוג לאורחים */}
+            <Route path="/ratingGuess" element={<RatingPageNoUser />} />
+
              {/*  עבור דף דירוג>*/}
              <Route path="/rating" element={<RatingPage />} />
 
@@ -67,10 +71,11 @@ function App() {
             <Route path="/upload" element={<UploadPost />} />
 
             {/* Route עבור דף פרופיל המשתמש, אם המשתמש מחובר */}
-            <Route
+            <Route path="/profile/:userId" element={<ProfilePage />} />
+            {/* <Route
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
-            />
+            /> */}
           </Routes>
         </ThemeProvider>
       </BrowserRouter>

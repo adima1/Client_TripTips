@@ -28,6 +28,11 @@ export const authSlice = createSlice({
       state.user = null;
       state.token = null;
     },
+    
+    setUser: (state, action) => {
+      state.user = action.payload.user;
+    },
+  
     // פעולה להגדרת רשימת חברים של המשתמש
     setFriends: (state, action) => {
       if (state.user) 
@@ -79,7 +84,7 @@ export const authSlice = createSlice({
 });
 
 // ייצוא הפעולות (actions) לייבוא ושימוש בקומפוננטות אחרות
-export const { setMode, setLogin, setLogout, setFriends, setFollowers, setFollowing, setPosts, setPost} =
+export const { setMode, setLogin, setLogout, setUser, setFriends, setFollowers, setFollowing, setPosts, setPost} =
   authSlice.actions;
 
 // ייצוא ה-reducer לשימוש בקונפיגורציית ה-store

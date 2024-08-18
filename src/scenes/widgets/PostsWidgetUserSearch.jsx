@@ -1,16 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
 import PropTypes from "prop-types";
+import { Box, Typography, useTheme } from "@mui/material";
+import WidgetWrapper from "components/WidgetWrapper";
+import UserImage from "components/UserImage";
+import FlexBetween from "components/FlexBetween";
 
-const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLiked = false, isSaved = false, isShared = false }) => {
+const PostsWidget = ({ userId, region, searchTerm , isProfile = false, isLiked = false, isSaved = false, isShared = false }) => {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts || []); // וידוא שמצב הפוסטים הוא מערך
+  const { palette } = useTheme();
+  const posts = useSelector((state) => state.posts || []);
   const token = useSelector((state) => state.token);
+  const [user, setUser] = useState(null);
 
   const getAllPosts = async () => {
-    const response = await fetch(`http://localhost:3001/posts?searchTerm=${encodeURIComponent(searchTerm)}`, {
+    const response = await fetch(`https://server-triptips.onrender.com/posts?searchTerm=${encodeURIComponent(searchTerm)}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -19,7 +25,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
   };
 
   const getPostsByRegion = async () => {
-    const response = await fetch(`http://localhost:3001/posts/region?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`, {
+    const response = await fetch(`https://server-triptips.onrender.com/posts/region?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -29,19 +35,24 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 
   const getUserPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
+      `https://server-triptips.onrender.com/posts/${userId}/posts?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     const data = await response.json();
-    dispatch(setPosts({ posts: data }));
+    if (data.user && data.posts) {
+      setUser(data.user);
+      dispatch(setPosts({ posts: data.posts }));
+    } else {
+      dispatch(setPosts({ posts: data }));
+    }
   };
 
   const getLikedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/likes?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
+      `https://server-triptips.onrender.com/${userId}/likes?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -53,7 +64,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 
   const getSavedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/saves?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
+      `https://server-triptips.onrender.com/posts/${userId}/saves?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -65,7 +76,7 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 
   const getSharedPosts = async () => {
     const response = await fetch(
-      `http://localhost:3001/posts/${userId}/shares?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
+      `https://server-triptips.onrender.com/posts/${userId}/shares?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -85,18 +96,44 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
     } else if (isShared) {
       getSharedPosts();
     } else if (region) {
-      getPostsByRegion(); // כאשר נבחר אזור, מביאים פוסטים לפי האזור ומונח החיפוש
+      getPostsByRegion();
     } else {
-      getAllPosts(); // כאשר לא נבחר אזור, מביאים את כל הפוסטים עם אפשרות לחיפוש לפי מונח
+      getAllPosts();
     }
-  }, [region, searchTerm, isProfile, isLiked, isSaved, isShared]);
+  }, [searchTerm, region, isProfile, isLiked, isSaved, isShared]);
 
   if (!Array.isArray(posts) || posts.length === 0) {
-    return <div>oopsi not found :)</div>; // הצגת הודעה כאשר אין פוסטים זמינים
+    return <div>oopsi not found :)</div>;
   }
 
   return (
     <>
+      {/* {user && (
+        <WidgetWrapper>
+          <FlexBetween gap="0.5rem" pb="1.1rem">
+            <FlexBetween gap="1rem">
+              <UserImage image={user.picturePath} size="55px" />
+              <Box>
+                <Typography
+                  variant="h4"
+                  color={palette.neutral.dark}
+                  fontWeight="500"
+                  sx={{
+                    "&:hover": {
+                      color: palette.primary.light,
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  {`${user.firstName} ${user.lastName}`}
+                </Typography>
+                <Typography color={palette.neutral.medium}>{user.occupation}</Typography>
+              </Box>
+            </FlexBetween>
+          </FlexBetween>
+          <Typography color={palette.neutral.medium}>Stars: {user.stars || 0}</Typography>
+        </WidgetWrapper>
+      )} */}
       {posts.map(
         ({
           _id,
@@ -112,21 +149,23 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
           saved, 
           shared,
           comments,
+          userStars,
         }) => (
           <PostWidget
-            key={_id} // מפתח ייחודי לכל פוסט
-            postId={_id} // מזהה הפוסט
-            postUserId={userId} // מזהה המשתמש שפרסם את הפוסט
-            name={`${firstName} ${lastName}`} // שם מלא של המשתמש
-            title={title} // כותרת הפוסט
-            description={description} // תיאור הפוסט
-            location={location} // מיקום הפוסט
-            picturePath={picturePath} // נתיב התמונה של הפוסט
-            userPicturePath={userPicturePath} // נתיב התמונה של המשתמש
-            likes={likes} // לייקים על הפוסט
-            saved={saved} // שמירות של הפוסט
-            shared={shared} // שיתופים של הפוסט
-            comments={comments} // תגובות על הפוסט
+            key={_id}
+            postId={_id}
+            postUserId={userId}
+            name={`${firstName} ${lastName}`}
+            title={title}
+            description={description}
+            location={location}
+            picturePath={picturePath}
+            userPicturePath={userPicturePath}
+            likes={likes}
+            saved={saved}
+            shared={shared}
+            comments={comments}
+            stars={userStars}
           />
         )
       )}
@@ -135,13 +174,13 @@ const PostsWidget = ({ userId, region, searchTerm = "", isProfile = false, isLik
 };
 
 PostsWidget.propTypes = {
-  userId: PropTypes.string.isRequired, // מזהה המשתמש חובה
-  region: PropTypes.string, // אזור (אופציונלי)
-  searchTerm: PropTypes.string, // מונח החיפוש (אופציונלי)
-  isProfile: PropTypes.bool, // האם הפוסטים מוצגים בפרופיל
-  isLiked: PropTypes.bool, // האם הפוסטים מסוננים לפי לייקים
-  isSaved: PropTypes.bool, // האם הפוסטים מסוננים לפי שמירות
-  isShared: PropTypes.bool, // האם הפוסטים מסוננים לפי שיתופים
+  userId: PropTypes.string.isRequired,
+  region: PropTypes.string,
+  searchTerm: PropTypes.string,
+  isProfile: PropTypes.bool,
+  isLiked: PropTypes.bool,
+  isSaved: PropTypes.bool,
+  isShared: PropTypes.bool,
 };
 
 export default PostsWidget;

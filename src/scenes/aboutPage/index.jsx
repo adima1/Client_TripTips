@@ -6,7 +6,7 @@ const AboutPage = () => {
 
   useEffect(() => {
     // החלף לכתובת השרת שלך
-    fetch("http://localhost:3001/about")
+    fetch("https://server-triptips.onrender.com/about")
       .then((response) => response.json())
       .then((data) => setAboutContent(data))
       .catch((error) => console.error("שגיאה בטעינת תוכן אודות:", error));

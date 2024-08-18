@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 import PropTypes from "prop-types";
 
+
 // בדיקת יבואות
 console.log("UserImage:", UserImage);
 console.log("FlexBetween:", FlexBetween);
@@ -31,7 +32,7 @@ const UserWidget = ({ userId, picturePath }) => {
 
   const getUser = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      const response = await fetch(`https://server-triptips.onrender.com/users/${userId}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });

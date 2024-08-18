@@ -6,32 +6,45 @@ import PostsWidget from "scenes/widgets/PostsWidget";
 
 const HomePage = () => {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-    const { _id, picturePath } = useSelector((state) => state.user);
+    const user = useSelector((state) => state.user);
+
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <Box
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center", // מרכז את התוכן
-                p: 2, // הוסף ריפוד פנימי
+                alignItems: "center",
+                p: 2,
+                width: "100%",
+                overflowX: "hidden",
             }}
         >
-            <Navbar />
             <Box
                 sx={{
-                    
-                    maxWidth: "700px", // מגביל את רוחב התוכן למקסימום של 1200 פיקסלים
-                    width: "100%", // גורם לתוכן לתפוס את רוחב הקונטיינר ההורה
-                    px: isNonMobileScreens ? 4 : 2, // הוסף ריפוד צדדי בהתאמה למסך קטן וגדול
+                    width: "100%",
+                    position: "fixed",
+                    top: 0,
+                    zIndex: 1000,
                 }}
             >
-                <PostsWidget userId={_id} userPicturePath={picturePath}/>
+                <Navbar />
+            </Box>
+            <Box
+                sx={{
+                    mt: 8,
+                    maxWidth: "700px",
+                    width: "100%",
+                    px: isNonMobileScreens ? 4 : 2,
+                }}
+            >
+                <PostsWidget userId={user.id} userPicturePath={user.picturePath} />
             </Box>
         </Box>
     );
 };
 
-
 export default HomePage;
-

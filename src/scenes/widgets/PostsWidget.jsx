@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
@@ -6,127 +6,80 @@ import PropTypes from "prop-types";
 
 const PostsWidget = ({ userId, isProfile = false, isLiked = false, isSaved = false, isShared = false }) => {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts || []); // Ensure posts is an array
+  const posts = useSelector((state) => state.posts || []);
   const token = useSelector((state) => state.token);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const getPosts = async () => {
-    const response = await fetch("http://localhost:3001/posts", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
-
-  const getUserPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/posts`,
-      {
+  const fetchPosts = async (url, type) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      console.log(`Fetching ${type} posts...`);
+      const response = await fetch(url, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    );
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
-
-  const getLikedPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/likes`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
-
-  const getSavedPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/saves`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
-
-  const getSharedPosts = async () => {
-    const response = await fetch(
-      `http://localhost:3001/posts/${userId}/shares`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
+      const data = await response.json();
+      console.log(`Received ${type} posts:`, data);
+      dispatch(setPosts({ posts: data }));
+    } catch (e) {
+      console.error(`Error fetching ${type} posts:`, e);
+      setError(`Failed to fetch ${type} posts`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (isProfile) {
-      getUserPosts();
-    }
-    
-    if (isLiked)  {
-      getLikedPosts();
-    }
+    console.log("PostsWidget useEffect triggered");
+    console.log("Current props:", { userId, isProfile, isLiked, isSaved, isShared });
 
-    if (isSaved)  {
-      getSavedPosts();
+    if (userId) {
+      if (isProfile) {
+        fetchPosts(`https://server-triptips.onrender.com/posts/${userId}/post`, "user");
+      } else if (isLiked) {
+        fetchPosts(`https://server-triptips.onrender.com/${userId}/likes`, "liked");
+      } else if (isSaved) {
+        fetchPosts(`https://server-triptips.onrender.com/${userId}/saves`, "saved");
+      } else if (isShared) {
+        fetchPosts(`https://server-triptips.onrender.com/${userId}/shares`, "shared");
+      } else {
+        fetchPosts(`https://server-triptips.onrender.com/${userId}/following`, "following");
+      }
     }
+  }, [userId, isProfile, isLiked, isSaved, isShared, token]);
 
-    if (isShared)  {
-      getSharedPosts();
-    }
+  console.log("Current posts state:", posts);
 
-    else {
-      getPosts();
-    }
-  }, [isProfile, isLiked, isSaved, isShared]); // Add isProfile and isLiked as dependencies if they can change
-
-  if (!Array.isArray(posts)) {
-    return <div>No posts available</div>;
-  }
+  if (!userId) return null;
+  if (isLoading) return <div>Loading posts...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!Array.isArray(posts) || posts.length === 0) return <div>No posts available</div>;
 
   return (
     <>
-      {posts.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          title,
-          description,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          saved, 
-          shared,
-          comments,
-        }) => (
-          <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            name={`${firstName} ${lastName}`}
-            title= {title}
-            description={description}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            saved={saved}
-            shared={shared}
-            comments={comments}
-          />
-        )
-      )}
+      {posts.map((post) => (
+        <PostWidget
+          key={post._id}
+          postId={post._id}
+          postUserId={post.userId}
+          name={`${post.firstName} ${post.lastName}`}
+          title={post.title}
+          description={post.description}
+          location={post.location}
+          picturePath={post.picturePath}
+          userPicturePath={post.userPicturePath}
+          likes={post.likes}
+          saved={post.saved}
+          shared={post.shared}
+          comments={post.comments}
+          stars={post.userStars}
+        />
+      ))}
     </>
   );
 };

@@ -9,7 +9,7 @@ const PostsWidgetNoUserSearch = ({ region, searchTerm }) => {
   const posts = useSelector((state) => state.posts || []);
 
   const getAllPosts = async () => {
-    const response = await fetch(`http://localhost:3001/posts/guest?searchTerm=${encodeURIComponent(searchTerm)}`, {
+    const response = await fetch(`https://server-triptips.onrender.com/posts/guest?searchTerm=${encodeURIComponent(searchTerm)}`, {
       method: "GET",
     });
     const data = await response.json();
@@ -17,7 +17,7 @@ const PostsWidgetNoUserSearch = ({ region, searchTerm }) => {
   };
 
   const getPostsByRegion = async () => {
-    const response = await fetch(`http://localhost:3001/posts/region/guest?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`, {
+    const response = await fetch(`https://server-triptips.onrender.com/posts/region/guest?region=${encodeURIComponent(region)}&searchTerm=${encodeURIComponent(searchTerm)}`, {
       method: "GET",
     });
     const data = await response.json();
@@ -50,6 +50,7 @@ const PostsWidgetNoUserSearch = ({ region, searchTerm }) => {
           userPicturePath,
           likes,
           location, // הוספת location לפוסט
+          userStars
         }) => (
           <PostWidgetNoUser
             key={_id} 
@@ -60,6 +61,7 @@ const PostsWidgetNoUserSearch = ({ region, searchTerm }) => {
             userPicturePath={userPicturePath}
             likeCount={Object.keys(likes).length} 
             location={location} // העברת location ל-PostWidgetNoUser
+            stars={userStars}
           />
         )
       )}

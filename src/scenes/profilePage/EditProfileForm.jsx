@@ -86,7 +86,7 @@ const EditProfileForm = ({ open, handleClose, currentUser, onSave }) => {
         formData.append(key, values[key]);
       });
 
-      const response = await fetch(`http://localhost:3001/auth/${currentUser._id}`, {
+      const response = await fetch(`https://server-triptips.onrender.com/auth/${currentUser._id}`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ const EditProfileForm = ({ open, handleClose, currentUser, onSave }) => {
 
   const deleteUserAccount = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/auth/${currentUser._id}/deletePosts`, {
+        const response = await fetch(`https://server-triptips.onrender.com/auth/${currentUser._id}/deletePosts`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -128,7 +128,7 @@ const EditProfileForm = ({ open, handleClose, currentUser, onSave }) => {
           try {
             console.log("id: ", currentUser._id);
             console.log("token", token);
-            const response = await fetch(`http://localhost:3001/auth/${currentUser._id}/deleteUser`, {
+            const response = await fetch(`https://server-triptips.onrender.com/auth/${currentUser._id}/deleteUser`, {
               method: "DELETE",
               headers: {
                 Authorization: `Bearer ${token}`,

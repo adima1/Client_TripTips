@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFollowing } from "state";
 import PropTypes from "prop-types";
 
-const FollowingListWidget = ({ userId }) => {
+const FollowingListWidget = ({ userId, onFollowingChange  }) => {
   const dispatch = useDispatch();
   const { palette } = useTheme();
   const token = useSelector((state) => state.token);
@@ -16,7 +16,7 @@ const FollowingListWidget = ({ userId }) => {
   const getFollowing = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/users/${userId}/following`,
+        `https://server-triptips.onrender.com/users/${userId}/following`,
         {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
@@ -27,12 +27,13 @@ const FollowingListWidget = ({ userId }) => {
       }
       const data = await response.json();
       dispatch(setFollowing({ following: data }));
+      if (onFollowingChange) {
+        onFollowingChange(data.length);
+      }
     } catch (error) {
       console.error("Error fetching following:", error);
-      // Handle error (e.g., show error message to user)
     }
-
-  }, [userId, token, dispatch]);
+  }, [userId, token, dispatch, onFollowingChange]);
 
   useEffect(() => {
     getFollowing();
@@ -59,6 +60,7 @@ const FollowingListWidget = ({ userId }) => {
             name={`${follow.firstName} ${follow.lastName}`}
             subtitle={follow.occupation}
             userPicturePath={follow.picturePath}
+            starts = {follow.starts}
           />
         ))}
       </Box>
@@ -68,6 +70,7 @@ const FollowingListWidget = ({ userId }) => {
 
 FollowingListWidget.propTypes = {
   userId: PropTypes.string.isRequired,
+  onFollowingChange: PropTypes.func,
 };
 
 export default FollowingListWidget;
