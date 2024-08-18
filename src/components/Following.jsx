@@ -75,7 +75,7 @@ const Follow = ({ followingId, name, subtitle, userPicturePath, stars }) => {
         <Box
           onClick={() => {
             navigate(`/profile/${followingId}`);
-            navigate(0);
+            // navigate(0);
           }}
         >
           <Typography
